@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +19,8 @@ class _RentPageState extends State<RentPage> {
   TextEditingController _priceController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _depositController = TextEditingController();
+
+  List<File?> _selectedImages = [];
 
   File? _image;
 
@@ -139,8 +140,10 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _depositController,
                 ),
-                SizedBox(height: 10,),
-                //Upload Images button 
+                SizedBox(
+                  height: 05,
+                ),
+                //Upload Images button
                 Center(
                   child: Container(
                     height: 200,
@@ -178,13 +181,13 @@ class _RentPageState extends State<RentPage> {
                                   Icon(
                                     Icons.image_rounded,
                                     color: Colors.amber,
-                                    size: 32.0,
+                                    size: 36.0,
                                   ),
                                   SizedBox(height: 8.0),
                                   Text(
-                                    "Upload image",
+                                    "Upload image!",
                                     style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -194,66 +197,85 @@ class _RentPageState extends State<RentPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                SizedBox(height: 05),
+                //Submit button
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
 
-                      try {
-                        // Upload the image to Firebase Storage
-                        if (_image != null) {
-                          Reference ref = FirebaseStorage.instance
-                              .ref()
-                              .child('rents')
-                              .child(DateTime.now().toString());
-                          UploadTask uploadTask = ref.putFile(_image!);
-                          TaskSnapshot taskSnapshot =
-                              await uploadTask.whenComplete(() => null);
-                          String imageUrl =
-                              await taskSnapshot.ref.getDownloadURL();
+                        try {
+                          // Upload the image to Firebase Storage
+                          if (_image != null) {
+                            Reference ref = FirebaseStorage.instance
+                                .ref()
+                                .child('rents')
+                                .child(DateTime.now().toString());
+                            UploadTask uploadTask = ref.putFile(_image!);
+                            TaskSnapshot taskSnapshot =
+                                await uploadTask.whenComplete(() => null);
+                            String imageUrl =
+                                await taskSnapshot.ref.getDownloadURL();
 
-                          // Save the data to Firestore
-                          await FirebaseFirestore.instance
-                              .collection('rents')
-                              .add({
-                            'ownerName': _ownerNameController.text,
-                            'productName': _productNameController.text,
-                            'price': double.parse(_priceController.text),
-                            'description': _descriptionController.text,
-                            'deposit': double.parse(_depositController.text),
-                            'imageUrl': imageUrl,
-                          });
+                            // Save the data to Firestore
+                            await FirebaseFirestore.instance
+                                .collection('rents')
+                                .add({
+                              'ownerName': _ownerNameController.text,
+                              'productName': _productNameController.text,
+                              'price': double.parse(_priceController.text),
+                              'description': _descriptionController.text,
+                              'deposit': double.parse(_depositController.text),
+                              'imageUrl': imageUrl,
+                            });
 
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Rent data submitted'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+
+                            // Clear the text fields and image
+                            _ownerNameController.clear();
+                            _productNameController.clear();
+                            _priceController.clear();
+                            _descriptionController.clear();
+                            _depositController.clear();
+                            setState(() {
+                              _image = null;
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please select an image'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          print(e.toString());
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Rent data submitted'),
+                              content: Text('Failed to submit rent data'),
                               duration: Duration(seconds: 2),
                             ),
                           );
-
-                          // Clear the text fields and image
-                          _ownerNameController.clear();
-                          _productNameController.clear();
-                          _priceController.clear();
-                          _descriptionController.clear();
-                          _depositController.clear();
-                          setState(() {
-                            _image = null;
-                          });
                         }
-                      } catch (e) {
-                        print(e.toString());
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to submit rent data'),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
                       }
-                    }
-                  },
-                  child: Text('Submit'),
+                    },
+                    child: Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      minimumSize: Size(200, 50),
+                    ),
+                  ),
                 ),
               ],
             ),
