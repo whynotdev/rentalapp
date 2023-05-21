@@ -140,55 +140,57 @@ class _RentPageState extends State<RentPage> {
                   controller: _depositController,
                 ),
                 SizedBox(height: 10,),
-                  
-                Container(
-                  height: 200,
-                  width: 200,
-                  child: GestureDetector(
-                    onTap: () async {
-                      final source = await showDialog<ImageSource>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("Select image!"),
-                          actions: [
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.pop(context, ImageSource.camera),
-                              child: Text("Camera"),
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.pop(context, ImageSource.gallery),
-                              child: Text("Album"),
-                            ),
-                          ],
-                        ),
-                      );
-                      if (source != null) {
-                        _getImage(source);
-                      }
-                    },
-                    child: Center(
-                      child: _image != null
-                          ? Image.file(_image!, fit: BoxFit.cover)
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.image_rounded,
-                                  color: Colors.amber,
-                                  size: 32.0,
-                                ),
-                                SizedBox(height: 8.0),
-                                Text(
-                                  "Upload image",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+                //Upload Images button 
+                Center(
+                  child: Container(
+                    height: 200,
+                    width: 200,
+                    child: GestureDetector(
+                      onTap: () async {
+                        final source = await showDialog<ImageSource>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("Select image!"),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, ImageSource.camera),
+                                child: Text("Camera"),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, ImageSource.gallery),
+                                child: Text("Album"),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (source != null) {
+                          _getImage(source);
+                        }
+                      },
+                      child: Center(
+                        child: _image != null
+                            ? Image.file(_image!, fit: BoxFit.cover)
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image_rounded,
+                                    color: Colors.amber,
+                                    size: 32.0,
                                   ),
-                                ),
-                              ],
-                            ),
+                                  SizedBox(height: 8.0),
+                                  Text(
+                                    "Upload image",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
                     ),
                   ),
                 ),
