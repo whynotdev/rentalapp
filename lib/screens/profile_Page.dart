@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/screens/home_page.dart';
+import 'package:rentalapp/screens/products_Page.dart';
 
 import '../services/firebase_services.dart';
+import 'cart_page.dart';
 import 'login.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,7 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final List<Widget> _pages = [
     HomePage(),
-    //ProductsPage(),    CartPage(),
+    ProductPage(),    
+    CartPage(),
     ProfileScreen(),
   ];
   @override
