@@ -36,6 +36,12 @@ class _CartPageState extends State<CartPage> {
       print('Error retrieving cart items: $error');
     }
   }
+  //temporary removing has to change
+  void _removeFromCart(int index) {
+  setState(() {
+    cartItems.removeAt(index); // Remove the item from the cartItems list
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +143,7 @@ class _CartPageState extends State<CartPage> {
               trailing: ElevatedButton(
                 onPressed: () {
                   // TODO: Implement remove from cart functionality
+                  _removeFromCart(index); //change in upcoming
                 },
                 child: Text('Remove'),
               ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/screens/home_page.dart';
 
+import '../services/firebase_services.dart';
+import 'login.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key});
 
@@ -23,9 +26,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
+        appBar: AppBar(
         title: Text('R e n t o'),
-      ),*/
+        actions: [
+                  IconButton(
+                  icon: Icon(Icons.logout,
+                  color: Colors.black,),
+                  onPressed: () async{
+                  await FirebaseServices().SignOut();
+                  Navigator.push(context,
+                   MaterialPageRoute(builder: (context) => LoginScreen(),));
+                    
+                  // TODO: Logout functionality here
+                 },
+
+    ),
+
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -88,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
 
       //navigation bar
-
+/*
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -124,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
         },
-      ),
+      ),*/
     );
   }
 }
