@@ -8,22 +8,25 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         title: Text('R e n t o'),
         actions: [
-                  IconButton(
-                  icon: Icon(Icons.logout,
-                  color: Colors.black,),
-                  onPressed: () async{
-                  await FirebaseServices().SignOut();
-                  Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => LoginScreen(),));
-                    
-                  // TODO: Logout functionality here
-                 },
+          IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
+            onPressed: () async {
+              await FirebaseServices().SignOut();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ));
 
-    ),
-
+              // TODO: Logout functionality here
+            },
+          ),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -57,15 +60,16 @@ class ProductPage extends StatelessWidget {
               final price = data['price'] as double?;
 
               return Card(
+                elevation: 4, // Add elevation to create a shadow effect
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: imageUrl != null
-                          ? Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                            )
+                          ? Image.network(imageUrl, fit: BoxFit.cover)
                           : Center(child: Text('Image not available')),
                     ),
                     Padding(
@@ -81,7 +85,9 @@ class ProductPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
-                        price != null ? '\$${price.toStringAsFixed(2)}/month' : 'Price not available',
+                        price != null
+                            ? '\$${price.toStringAsFixed(2)}/month'
+                            : 'Price not available',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[700],
@@ -95,37 +101,19 @@ class ProductPage extends StatelessWidget {
                           // Handle view details button click
                           // You can navigate to another page or show a dialog with the details
                           Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewProducts(),
-                  ));
-
-                          /*showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Product Details'),
-                                content: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('Product Name: ${productName ?? ''}'),
-                                    SizedBox(height: 8),
-                                    Text('Price: ${price != null ? '\$${price.toStringAsFixed(2)}/month' : 'N/A'}'),
-                                    // Add more details as needed
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text('Close'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );*/
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewProducts(),
+                            ),
+                          );
                         },
                         child: Text('View Details'),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          //minimumSize: const Size(200, 50),
+                        ),
                       ),
                     ),
                   ],
