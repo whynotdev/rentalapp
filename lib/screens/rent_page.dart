@@ -12,7 +12,7 @@ class RentPage extends StatefulWidget {
 }
 
 class _RentPageState extends State<RentPage> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();//for validation
 
   TextEditingController _ownerNameController = TextEditingController();
   TextEditingController _productNameController = TextEditingController();
@@ -20,9 +20,11 @@ class _RentPageState extends State<RentPage> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _depositController = TextEditingController();
 
-  List<File?> _selectedImages = [];
+  List<File?> _selectedImages = []; //selecting images
 
   File? _image;
+  String? _selectedType; //dropdowntype
+ // final FocusNode _typeFocusNode = FocusNode();
 
   void _getImage(ImageSource source) async {
     final pickedFile = await ImagePicker().getImage(source: source);
@@ -37,7 +39,7 @@ class _RentPageState extends State<RentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("R e n t o"),
+        title: const Text("R e n t o"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -47,8 +49,9 @@ class _RentPageState extends State<RentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //textfield for name
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Owner Name',
                     border: OutlineInputBorder(),
                   ),
@@ -63,9 +66,10 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _ownerNameController,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
+                //for product name
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Product Name',
                     border: OutlineInputBorder(),
                   ),
@@ -80,9 +84,10 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _productNameController,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
+                //for price
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Price',
                     border: OutlineInputBorder(),
                   ),
@@ -101,27 +106,11 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _priceController,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
+                //for deposit
+
                 TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the description';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _descriptionController.text = value!;
-                  },
-                  controller: _descriptionController,
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Deposit',
                     border: OutlineInputBorder(),
                   ),
@@ -140,7 +129,111 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _depositController,
                 ),
-                SizedBox(
+                const SizedBox(height: 16.0),
+                //for_type_of_product_selection
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Select Type'),
+                          content: DropdownButtonFormField<String>(
+                            value: _selectedType,
+                            items: [
+                              const DropdownMenuItem(
+                                value: 'dslr',
+                                child: Text('DSLR'),
+                              ),
+                              const DropdownMenuItem(
+                                value: 'laptop',
+                                child: Text('Laptop'),
+                              ),
+                              const DropdownMenuItem(
+                                value: 'music',
+                                child: Text('Music'),
+                              ),
+                              const DropdownMenuItem(
+                                value: 'smartphone',
+                                child: Text('Smartphone'),
+                              ),
+                              const DropdownMenuItem(
+                                value: 'gears',
+                                child: Text('Gears'),
+                              ),
+                              const DropdownMenuItem(
+                                value: 'others',
+                                child: Text('Others'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedType = value;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a type';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              // Store the selected type in Firestore along with other data
+                              _selectedType = value!;
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Type',
+                      border: OutlineInputBorder(),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _selectedType ?? 'Select a type',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              // fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                //for description of product
+
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the description';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _descriptionController.text = value!;
+                  },
+                  controller: _descriptionController,
+                ),
+
+                const SizedBox(
                   height: 05,
                 ),
                 //Upload Images button
@@ -153,17 +246,17 @@ class _RentPageState extends State<RentPage> {
                         final source = await showDialog<ImageSource>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text("Select image!"),
+                            title: const Text("Select image!"),
                             actions: [
                               TextButton(
                                 onPressed: () =>
                                     Navigator.pop(context, ImageSource.camera),
-                                child: Text("Camera"),
+                                child: const Text("Camera"),
                               ),
                               TextButton(
                                 onPressed: () =>
                                     Navigator.pop(context, ImageSource.gallery),
-                                child: Text("Album"),
+                                child: const Text("Album"),
                               ),
                             ],
                           ),
@@ -178,13 +271,13 @@ class _RentPageState extends State<RentPage> {
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.image_rounded,
                                     color: Colors.amber,
                                     size: 36.0,
                                   ),
-                                  SizedBox(height: 8.0),
-                                  Text(
+                                  const SizedBox(height: 8.0),
+                                  const Text(
                                     "Upload image!",
                                     style: TextStyle(
                                       fontSize: 18.0,
@@ -197,8 +290,8 @@ class _RentPageState extends State<RentPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 05),
-                //Submit button
+                const SizedBox(height: 05),
+                //Submit button of all fields to Firestore
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
@@ -227,11 +320,12 @@ class _RentPageState extends State<RentPage> {
                               'price': double.parse(_priceController.text),
                               'description': _descriptionController.text,
                               'deposit': double.parse(_depositController.text),
+                              'type': _selectedType,
                               'imageUrl': imageUrl,
                             });
 
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Rent data submitted'),
                                 duration: Duration(seconds: 2),
                               ),
@@ -244,11 +338,12 @@ class _RentPageState extends State<RentPage> {
                             _descriptionController.clear();
                             _depositController.clear();
                             setState(() {
-                              _image = null;
+                              _selectedType = null;//clears type
+                              _image = null; //clears the image
                             });
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Please select an image'),
                                 duration: Duration(seconds: 2),
                               ),
@@ -257,7 +352,7 @@ class _RentPageState extends State<RentPage> {
                         } catch (e) {
                           print(e.toString());
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Failed to submit rent data'),
                               duration: Duration(seconds: 2),
                             ),
@@ -265,7 +360,7 @@ class _RentPageState extends State<RentPage> {
                         }
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Submit',
                       style: TextStyle(fontSize: 20),
                     ),
@@ -273,7 +368,7 @@ class _RentPageState extends State<RentPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      minimumSize: Size(200, 50),
+                      minimumSize: const Size(200, 50),
                     ),
                   ),
                 ),
