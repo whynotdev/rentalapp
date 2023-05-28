@@ -60,7 +60,7 @@ class ProductPage extends StatelessWidget {
               final price = data['price'] as double?;
 
               return Card(
-                elevation: 4, // Add elevation to create a shadow effect
+                elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -112,9 +112,43 @@ class ProductPage extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          //minimumSize: const Size(200, 50),
                         ),
                       ),
+                    ),
+
+                    
+                    // Edit and delete icons
+                    //if (true) // Replace this condition with your logic to determine if the user can edit/delete the product
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Tooltip(
+                          message: 'Edit the product',
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                            ),
+                            onPressed: () {
+                              // Handle edit button click
+                              // Implement your logic to edit the product details
+                            },
+                          ),
+                        ),
+                        Tooltip(
+                          message: 'Delete the product',
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              // Handle delete button click
+                              // Implement your logic to delete the product from Firestore
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
