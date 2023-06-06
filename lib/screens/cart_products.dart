@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rentalapp/screens/cart_page.dart';
 import '../services/firebase_services.dart';
 import 'login.dart';
@@ -102,13 +103,20 @@ class _ViewProductsState extends State<ViewProducts> {
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          addToCart(data);
-                        },
-                        child: Text('Add to Cart'),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            addToCart(data);
+                          },
+                          child: Text('Add to Cart'),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -127,8 +135,14 @@ class _ViewProductsState extends State<ViewProducts> {
 
   void addToCart(Map<String, dynamic> product) {
     FirebaseFirestore.instance.collection('cartitems').add(product);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Product added to cart')),
+    Fluttertoast.showToast(
+      msg: "Added Succefully! to Cart",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.grey[600],
+      textColor: Colors.black,
+      fontSize: 16.0,
     );
   }
 }

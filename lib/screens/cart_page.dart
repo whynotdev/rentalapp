@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rentalapp/screens/login.dart';
 import 'package:rentalapp/services/firebase_services.dart';
 
@@ -66,13 +67,15 @@ class _CartPageState extends State<CartPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                "assets/emty-cart.png",
+              SvgPicture.asset("assets/Empty_cart.svg",
+              width: 250,height: 300,),
+                          /* Image.asset(
+                              "assets/emty-cart.png",
                 width: 350,
                 height: 400,
                 fit: BoxFit.fill,
-              ),
-              SizedBox(height: 16),
+                                       ),*/
+              SizedBox(height: 30),
               Text(
                 'Your cart is empty',
                 style: TextStyle(
@@ -81,11 +84,13 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
               SizedBox(height: 16),
+
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text('Go back to products'),
+                
               ),
             ],
           ),

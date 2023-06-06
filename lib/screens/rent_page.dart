@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RentPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class RentPage extends StatefulWidget {
 }
 
 class _RentPageState extends State<RentPage> {
-  final _formKey = GlobalKey<FormState>();//for validation
+  final _formKey = GlobalKey<FormState>(); //for validation
 
   TextEditingController _ownerNameController = TextEditingController();
   TextEditingController _productNameController = TextEditingController();
@@ -23,9 +24,8 @@ class _RentPageState extends State<RentPage> {
   List<File?> _selectedImages = []; //selecting images
 
   File? _image;
-  String? _selectedType; //dropdowntype
- // final FocusNode _typeFocusNode = FocusNode();
-
+  String? _selectedType; //Type_Declartion
+    //function call for get image
   void _getImage(ImageSource source) async {
     final pickedFile = await ImagePicker().getImage(source: source);
     if (pickedFile != null) {
@@ -67,7 +67,8 @@ class _RentPageState extends State<RentPage> {
                   controller: _ownerNameController,
                 ),
                 const SizedBox(height: 16.0),
-                //for product name
+
+                //Get product name field
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Product Name',
@@ -85,7 +86,7 @@ class _RentPageState extends State<RentPage> {
                   controller: _productNameController,
                 ),
                 const SizedBox(height: 16.0),
-                //for price
+                //Get price field
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Price',
@@ -107,7 +108,7 @@ class _RentPageState extends State<RentPage> {
                   controller: _priceController,
                 ),
                 const SizedBox(height: 16.0),
-                //for deposit
+                //Get deposit field
 
                 TextFormField(
                   decoration: const InputDecoration(
@@ -129,91 +130,56 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _depositController,
                 ),
+
                 const SizedBox(height: 16.0),
-                //for_type_of_product_selection
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Select Type'),
-                          content: DropdownButtonFormField<String>(
-                            value: _selectedType,
-                            items: [
-                              const DropdownMenuItem(
-                                value: 'dslr',
-                                child: Text('DSLR'),
-                              ),
-                              const DropdownMenuItem(
-                                value: 'laptop',
-                                child: Text('Laptop'),
-                              ),
-                              const DropdownMenuItem(
-                                value: 'music',
-                                child: Text('Music'),
-                              ),
-                              const DropdownMenuItem(
-                                value: 'smartphone',
-                                child: Text('Smartphone'),
-                              ),
-                              const DropdownMenuItem(
-                                value: 'gears',
-                                child: Text('Gears'),
-                              ),
-                              const DropdownMenuItem(
-                                value: 'others',
-                                child: Text('Others'),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedType = value;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a type';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              // Store the selected type in Firestore along with other data
-                              _selectedType = value!;
-                            },
-                          ),
-                        );
-                      },
-                    );
+              //Type dropdown
+                DropdownButtonFormField<String>(
+                  value: _selectedType,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'dslr',
+                      child: Text('DSLR'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'laptop',
+                      child: Text('Laptop'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'music',
+                      child: Text('Music'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'smartphone',
+                      child: Text('Smartphone'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'gears',
+                      child: Text('Gears'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'others',
+                      child: Text('Others'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedType = value;
+                    });
                   },
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: 'Type',
-                      border: OutlineInputBorder(),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _selectedType ?? 'Select a type',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
+                  decoration: InputDecoration(
+                    labelText: 'Type',
+                    border: OutlineInputBorder(),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a type';
+                    }
+                    return null;
+                  },
                 ),
+
                 const SizedBox(height: 16.0),
-                //for description of product
+                //Get description of product
 
                 TextFormField(
                   decoration: const InputDecoration(
@@ -236,6 +202,7 @@ class _RentPageState extends State<RentPage> {
                 const SizedBox(
                   height: 05,
                 ),
+
                 //Upload Images button
                 Center(
                   child: Container(
@@ -270,14 +237,14 @@ class _RentPageState extends State<RentPage> {
                             ? Image.file(_image!, fit: BoxFit.cover)
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
+                                children: const [
+                                  Icon(
                                     Icons.image_rounded,
                                     color: Colors.amber,
                                     size: 36.0,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  const Text(
+                                  SizedBox(height: 8.0),
+                                  Text(
                                     "Upload image!",
                                     style: TextStyle(
                                       fontSize: 18.0,
@@ -291,6 +258,7 @@ class _RentPageState extends State<RentPage> {
                   ),
                 ),
                 const SizedBox(height: 05),
+                
                 //Submit button of all fields to Firestore
                 Center(
                   child: ElevatedButton(
@@ -324,11 +292,13 @@ class _RentPageState extends State<RentPage> {
                               'imageUrl': imageUrl,
                             });
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Rent data submitted'),
-                                duration: Duration(seconds: 2),
-                              ),
+                            Fluttertoast.showToast(
+                              msg: 'Succefully! submitted',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              backgroundColor: Colors.grey[600],
+                              textColor: Colors.white,
+                              fontSize: 16.0,
                             );
 
                             // Clear the text fields and image
@@ -338,24 +308,28 @@ class _RentPageState extends State<RentPage> {
                             _descriptionController.clear();
                             _depositController.clear();
                             setState(() {
-                              _selectedType = null;//clears type
-                              _image = null; //clears the image
+                              _selectedType = null;
+                              _image = null;
                             });
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please select an image'),
-                                duration: Duration(seconds: 2),
-                              ),
+                            Fluttertoast.showToast(
+                              msg: 'Please select an image',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.grey[600],
+                              textColor: Colors.white,
+                              fontSize: 16.0,
                             );
                           }
                         } catch (e) {
                           print(e.toString());
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Failed to submit rent data'),
-                              duration: Duration(seconds: 2),
-                            ),
+                          Fluttertoast.showToast(
+                            msg: 'Failed to submit rent data',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.grey[600],
+                            textColor: Colors.white,
+                            fontSize: 16.0,
                           );
                         }
                       }

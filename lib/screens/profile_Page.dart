@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rentalapp/screens/home_page.dart';
 import 'package:rentalapp/screens/products_Page.dart';
 
@@ -14,102 +15,50 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _name = '';
-  String _firstLetter = '';
   int _selectedIndex = 0;
 
   final TextEditingController _nameController = TextEditingController();
 
   final List<Widget> _pages = [
     HomePage(),
-    ProductPage(),    
+    ProductPage(),
     CartPage(),
     ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text('R e n t o'),
         actions: [
-                  IconButton(
-                  icon: Icon(Icons.logout,
-                  color: Colors.black,),
-                  onPressed: () async{
-                  await FirebaseServices().SignOut();
-                  Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => LoginScreen(),));
-                    
-                  // TODO: Logout functionality here
-                 },
+          IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
+            onPressed: () async {
+              await FirebaseServices().SignOut();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ));
 
-    ),
-
+              // TODO: Logout functionality here
+            },
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 30),
-            Card(
-              elevation: 5,
-              shape: CircleBorder(),
-              clipBehavior: Clip.antiAlias,
-              child: CircleAvatar(
-                radius: 70,
-                child: Text(
-                  _firstLetter,
-                  style: TextStyle(fontSize: 40),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Hi, $_name',
-              style: TextStyle(fontSize: 25),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Enter your name'),
-                    content: TextField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your name',
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _name = value;
-                          _firstLetter = value.isNotEmpty
-                              ? value.substring(0, 1).toUpperCase()
-                              : '';
-                        });
-                      },
-                    ),
-                    actions: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Submit'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: Text('Edit Name'),
-            ),
-          ],
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+      body:
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 50),
+        child: SvgPicture.asset("assets/profile_data.svg",
+        width: 200,height: 200,
         ),
       ),
 
       //navigation bar
-/*
+
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -145,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
         },
-      ),*/
+      ),
     );
   }
 }
