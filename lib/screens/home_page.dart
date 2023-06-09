@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('R e n t o'),
+        automaticallyImplyLeading: false, // This line removes the back button
         actions: [
                   IconButton(
                   icon: Icon(Icons.logout,

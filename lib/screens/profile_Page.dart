@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('R e n t o'),
+        
         actions: [
           IconButton(
             icon: Icon(

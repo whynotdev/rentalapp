@@ -10,6 +10,7 @@ class ProductPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('R e n t o'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(

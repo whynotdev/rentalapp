@@ -9,12 +9,12 @@ class Category {
 }
 
 List<Category> categories = [
-  Category(name: 'Gears', imagePath: 'assets/ctgry5.png'),
-  Category(name: 'DSLRs', imagePath: 'assets/ctgry3.jpg'),
-  Category(name: 'Laptops', imagePath: 'assets/ctgry2.png'),
-  Category(name: 'Music', imagePath: 'assets/ctgry4.jpg'),
-  Category(name: 'SmartPhones', imagePath: 'assets/ctgry1.jpg'),
-  Category(name: 'Others', imagePath: 'assets/ctgry6.png'),
+  Category(name: 'Film & Photography', imagePath: 'assets/ctgry3.jpg'),
+  Category(name: 'Lense', imagePath: 'assets/lenses.png'),
+  Category(name: 'Laptop', imagePath: 'assets/laptop.png'),
+  Category(name: 'Electronic', imagePath: 'assets/elce.png'),
+  Category(name: 'Drone', imagePath: 'assets/drone.jpeg'),
+  Category(name: 'Musical Inst', imagePath: 'assets/guiter.png'),
 ];
 
 class CategoryWidget extends StatelessWidget {

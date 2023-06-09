@@ -25,7 +25,7 @@ class _RentPageState extends State<RentPage> {
 
   File? _image;
   String? _selectedType; //Type_Declartion
-    //function call for get image
+  //function call for get image
   void _getImage(ImageSource source) async {
     final pickedFile = await ImagePicker().getImage(source: source);
     if (pickedFile != null) {
@@ -132,33 +132,33 @@ class _RentPageState extends State<RentPage> {
                 ),
 
                 const SizedBox(height: 16.0),
-              //Type dropdown
+                //Type dropdown
                 DropdownButtonFormField<String>(
                   value: _selectedType,
                   items: const [
                     DropdownMenuItem(
-                      value: 'dslr',
-                      child: Text('DSLR'),
+                      value: 'Films',
+                      child: Text('Film & Photography'),
                     ),
                     DropdownMenuItem(
-                      value: 'laptop',
+                      value: 'Laptops',
                       child: Text('Laptop'),
                     ),
                     DropdownMenuItem(
                       value: 'music',
-                      child: Text('Music'),
+                      child: Text('Musical Instrument '),
                     ),
                     DropdownMenuItem(
-                      value: 'smartphone',
-                      child: Text('Smartphone'),
+                      value: 'Drone',
+                      child: Text('Drone'),
                     ),
                     DropdownMenuItem(
-                      value: 'gears',
-                      child: Text('Gears'),
+                      value: 'Electronic',
+                      child: Text('Electronics'),
                     ),
                     DropdownMenuItem(
-                      value: 'others',
-                      child: Text('Others'),
+                      value: 'lenses',
+                      child: Text('Lenses'),
                     ),
                   ],
                   onChanged: (value) {
@@ -190,6 +190,9 @@ class _RentPageState extends State<RentPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the description';
+                    }
+                    if (value.trim().length > 200) {
+                      return 'Maximum character limit (including spaces) exceeded';
                     }
                     return null;
                   },
@@ -258,7 +261,7 @@ class _RentPageState extends State<RentPage> {
                   ),
                 ),
                 const SizedBox(height: 05),
-                
+
                 //Submit button of all fields to Firestore
                 Center(
                   child: ElevatedButton(
