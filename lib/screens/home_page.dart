@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     HomePage(),
-    ProductPage(),    
+    ProductPage(selectedCategory: '',),    
     CartPage(),    
     ProfileScreen(),
   ];
@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> {
       // Navigate to the ProductPage when the products icon is pressed
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProductPage()),
+        MaterialPageRoute(builder: (context) => ProductPage(selectedCategory: '',)),
       );
     } else if (index == 2) {
       // Navigate to the CartPage when the cart icon is pressed

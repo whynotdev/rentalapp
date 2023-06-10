@@ -103,6 +103,9 @@ class _ViewProductsState extends State<ViewProducts> {
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
+
+                    
+                    //add to cart button
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

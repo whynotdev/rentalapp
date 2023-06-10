@@ -5,7 +5,12 @@ import 'package:rentalapp/services/firebase_services.dart';
 import 'login.dart';
 
 class ProductPage extends StatelessWidget {
+  final String selectedCategory;
+
+  ProductPage({required this.selectedCategory});
+  
   @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +36,7 @@ class ProductPage extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: getProductsStream(),
+        stream: getProductsStream(selectedCategory),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -161,7 +166,14 @@ class ProductPage extends StatelessWidget {
     );
   }
 
-  Stream<QuerySnapshot> getProductsStream() {
-    return FirebaseFirestore.instance.collection('rents').snapshots();
+  Stream<QuerySnapshot> getProductsStream(String selectedCategory) {
+  CollectionReference collection = FirebaseFirestore.instance.collection('rents');
+  
+  if (selectedCategory != null && selectedCategory.isNotEmpty) {
+    return collection.where('type', isEqualTo: selectedCategory).snapshots();
+  } else {
+    return collection.snapshots();
   }
+}
+
 }

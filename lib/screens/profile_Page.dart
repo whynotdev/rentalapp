@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final List<Widget> _pages = [
     HomePage(),
-    ProductPage(),
+    ProductPage(selectedCategory: '',),
     CartPage(),
     ProfileScreen(),
   ];

@@ -141,7 +141,7 @@ class _RentPageState extends State<RentPage> {
                       child: Text('Film & Photography'),
                     ),
                     DropdownMenuItem(
-                      value: 'Laptops',
+                      value: 'Laptop',
                       child: Text('Laptop'),
                     ),
                     DropdownMenuItem(

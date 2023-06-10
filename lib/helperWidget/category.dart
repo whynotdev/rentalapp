@@ -17,10 +17,12 @@ List<Category> categories = [
   Category(name: 'Musical Inst', imagePath: 'assets/guiter.png'),
 ];
 
+String selectedCategory = 'Films'; //need to modifiyyyy
+
 class CategoryWidget extends StatelessWidget {
   final Category category;
 
-  CategoryWidget({required this.category});
+  const CategoryWidget({required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class CategoryWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductPage(/*category: category.name*/),
+            builder: (context) => ProductPage(selectedCategory: selectedCategory,/*category: category.name*/),
           ),
         );
       },
