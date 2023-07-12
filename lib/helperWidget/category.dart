@@ -17,7 +17,7 @@ List<Category> categories = [
   Category(name: 'Musical Inst', imagePath: 'assets/guiter.png'),
 ];
 
-String selectedCategory = 'Films'; //need to modifiyyyy
+//String selectedCategory = 'Film'; //need to modifiyyyy
 
 class CategoryWidget extends StatelessWidget {
   final Category category;
@@ -28,11 +28,12 @@ class CategoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print(category.name);
         // Navigate to the ProductsPage with the category name
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductPage(selectedCategory: selectedCategory,/*category: category.name*/),
+            builder: (context) => ProductPage(selectedCategory: category.name,/*category: category.name*/),
           ),
         );
       },

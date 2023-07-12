@@ -46,6 +46,9 @@ dependencies:
   animated_splash_screen: ^1.3.0
   cloud_firestore: ^4.6.0
   image_picker: ^0.8.7+4
+  calendar_date_picker2: ^0.5.2
+  upi_india: ^3.0.1
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:

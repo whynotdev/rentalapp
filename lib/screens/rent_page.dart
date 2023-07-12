@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rentalapp/screens/home_page.dart';
+
+import '../utils/routers.dart';
 
 class RentPage extends StatefulWidget {
   const RentPage({Key? key}) : super(key: key);
@@ -20,6 +24,7 @@ class _RentPageState extends State<RentPage> {
   TextEditingController _priceController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _depositController = TextEditingController();
+  TextEditingController _contactController = TextEditingController();
 
   List<File?> _selectedImages = []; //selecting images
 
@@ -39,6 +44,7 @@ class _RentPageState extends State<RentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text("R e n t o"),
       ),
       body: Padding(
@@ -137,7 +143,7 @@ class _RentPageState extends State<RentPage> {
                   value: _selectedType,
                   items: const [
                     DropdownMenuItem(
-                      value: 'Films',
+                      value: 'Film & Photography',
                       child: Text('Film & Photography'),
                     ),
                     DropdownMenuItem(
@@ -145,7 +151,7 @@ class _RentPageState extends State<RentPage> {
                       child: Text('Laptop'),
                     ),
                     DropdownMenuItem(
-                      value: 'music',
+                      value: 'Musical Inst',
                       child: Text('Musical Instrument '),
                     ),
                     DropdownMenuItem(
@@ -157,7 +163,7 @@ class _RentPageState extends State<RentPage> {
                       child: Text('Electronics'),
                     ),
                     DropdownMenuItem(
-                      value: 'lenses',
+                      value: 'Lenses',
                       child: Text('Lenses'),
                     ),
                   ],
@@ -203,9 +209,34 @@ class _RentPageState extends State<RentPage> {
                 ),
 
                 const SizedBox(
-                  height: 05,
+                  height: 10,
                 ),
 
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Contact No',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please provide contact details";
+                    }
+
+                    // Regular expression pattern for Indian mobile numbers
+                    final RegExp mobileRegExp = RegExp(r'^[6-9]\d{9}$');
+
+                    if (!mobileRegExp.hasMatch(value)) {
+                      return "Please enter a valid mobile number";
+                    }
+                  },
+                  onSaved: (Value) {
+                    _contactController.text = Value!;
+                  },
+                  controller: _contactController,
+                ),
+                  SizedBox(height: 10,),
+                
+                  
                 //Upload Images button
                 Center(
                   child: Container(
@@ -292,8 +323,12 @@ class _RentPageState extends State<RentPage> {
                               'description': _descriptionController.text,
                               'deposit': double.parse(_depositController.text),
                               'type': _selectedType,
+                              'usrcontact': _contactController.text,
                               'imageUrl': imageUrl,
-                            });
+                              "uid": FirebaseAuth.instance.currentUser!.uid,
+                              'status': 'Available',
+                            }).whenComplete(() => nextPageOnly(
+                                    context: context, page: HomePage()));
 
                             Fluttertoast.showToast(
                               msg: 'Succefully! submitted',
@@ -303,17 +338,6 @@ class _RentPageState extends State<RentPage> {
                               textColor: Colors.white,
                               fontSize: 16.0,
                             );
-
-                            // Clear the text fields and image
-                            _ownerNameController.clear();
-                            _productNameController.clear();
-                            _priceController.clear();
-                            _descriptionController.clear();
-                            _depositController.clear();
-                            setState(() {
-                              _selectedType = null;
-                              _image = null;
-                            });
                           } else {
                             Fluttertoast.showToast(
                               msg: 'Please select an image',
