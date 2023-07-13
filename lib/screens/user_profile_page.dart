@@ -109,7 +109,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               height: 20,
             ),
             SvgPicture.asset(
-              "assets/drawerr.svg",
+              "assets/drawer.svg",
               height: 200,
             ),
             SizedBox(

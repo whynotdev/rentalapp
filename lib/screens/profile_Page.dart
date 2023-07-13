@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rentalapp/screens/home_page.dart';
+import 'package:rentalapp/screens/payment_page.dart';
 import 'package:rentalapp/screens/products_Page.dart';
 import 'package:rentalapp/screens/user_booking_page.dart';
 import 'package:rentalapp/screens/user_prodcts_page.dart';
@@ -22,7 +21,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 0;
-String userName = '';
 
   final List<Widget> _pages = [
     HomePage(),
@@ -39,23 +37,6 @@ String userName = '';
       ),
     );
   }
-  Future<void> fetchUserProfileData() async {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
-  if (uid != null) {
-    final profileSnapshot = await FirebaseFirestore.instance
-        .collection('userprofile')
-        .doc(uid)
-        .get();
-
-    final profileData = profileSnapshot.data();
-    if (profileData != null) {
-      setState(() {
-        userName = profileData['name'] ?? '';
-      });
-    }
-  }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -179,14 +160,6 @@ String userName = '';
           children: [
           
  SizedBox(height: 30),
-Text(
-  userName.isNotEmpty ? 'Hi $userName' : 'Hi',
-  style: TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-  ),
-),
-
           SvgPicture.asset("assets/profile79.svg",
           height: 200,),
             SizedBox(height: 20),
@@ -327,6 +300,41 @@ Text(
                 onTap: () {
                   // Navigate to "Approved Products" page
                    nextPageOnly(context: context, page: BookingRequestPage());
+                },
+              ),
+            ),
+              Container(
+              margin: EdgeInsets.only(bottom: 12.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                leading: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.amber,
+                ),
+                title: Container(
+                  color: Colors.grey[300],
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Payment Method",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                  size: 18,
+                ),
+                onTap: () {
+                  // Navigate to "Approved Products" page
+                   nextPageOnly(context: context, page: Payment_Page());
                 },
               ),
             ),

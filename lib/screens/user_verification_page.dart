@@ -12,6 +12,9 @@ import 'package:rentalapp/screens/home_page.dart';
 import '../utils/routers.dart';
 
 class UserVerificationPage extends StatefulWidget {
+  final String uid;
+
+  const UserVerificationPage({Key? key, required this.uid}) : super(key: key);
   @override
   _UserVerificationPageState createState() => _UserVerificationPageState();
 }
@@ -102,7 +105,9 @@ LocationData? _currentLocation;
     // Store verification details in Firestore
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userId = user.uid;
+      final userId = user.uid;// Access the uid from the widget
+      final ownerUid = widget.uid;// Print the UID for testing purposes
+      print('UID: $ownerUid');
 
       await FirebaseFirestore.instance.collection('verification').doc(userId).set({
         'name': _nameController.text,
@@ -114,6 +119,7 @@ LocationData? _currentLocation;
         'longitude': longitude,
         'status': 'Available',
         "uid": FirebaseAuth.instance.currentUser!.uid,
+         'senduid': ownerUid,
       });
     }
 
@@ -168,6 +174,7 @@ LocationData? _currentLocation;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('User Verification'),
       ),
       body: SingleChildScrollView(
@@ -238,7 +245,15 @@ LocationData? _currentLocation;
                 
                 ElevatedButton(
                   onPressed: _selectDocument,
-                  child: Text('Select Document'),
+                  child: Text('Select Document',
+                   style: TextStyle(fontSize: 15),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                  
                 ),
                 SizedBox(height: 16.0),
                 _selectedDocument != null
@@ -252,7 +267,13 @@ LocationData? _currentLocation;
                     ? CircularProgressIndicator()
                     : ElevatedButton(
                         onPressed: _submitVerificationRequest,
-                        child: Text('Submit Request'),
+                        child: Text('Submit Request',
+                          style: TextStyle(fontSize: 15),),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
                       ),
               ],
             ),
