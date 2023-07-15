@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:rentalapp/pages/products_Page.dart';
+import 'package:rentalapp/pages/profile_Page.dart';
 import 'package:upi_india/upi_india.dart';
+
+import '../services/firebase_services.dart';
+import '../utils/routers.dart';
+import '../pages/cart_page.dart';
+import 'home_page.dart';
+import 'login_page.dart';
 
 class Payment_Page extends StatefulWidget {
   @override
@@ -48,11 +57,17 @@ class _Payment_PageState extends State<Payment_Page> {
     if (apps == null)
       return Center(child: CircularProgressIndicator());
     else if (apps!.length == 0)
-      return Center(
-        child: Text(
-          "No apps found to handle transaction.",
-          style: header,
-        ),
+      return Column(
+        children: [
+          SizedBox(height: 80,),
+          Text(
+            "No apps found to handle transaction.",
+          
+          ),
+         SizedBox(height: 20),
+          SvgPicture.asset("assets/upi.svg",
+          height: 200,), 
+        ],
       );
     else
       return Align(
@@ -140,9 +155,115 @@ class _Payment_PageState extends State<Payment_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('UPI'),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "R e n t o",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SvgPicture.asset(
+              "assets/drawer.svg",
+              height: 200,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 35),
+              child: Container(
+                height: 2.0,
+                width: 50,
+                color: Colors.amber,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Home",
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              selected: false,
+              onTap: () {
+                nextPageOnly(context: context, page: HomePage());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_cart),
+              title: Text("Products",
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              selected: false,
+              onTap: () {
+                nextPageOnly(
+                  context: context,
+                  page: ProductPage(
+                    selectedCategory: "",
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_basket),
+              title: Text("Cart",
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              selected: false,
+              onTap: () {
+                nextPageOnly(context: context, page: CartPage());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Profile",
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              selected: true,
+              onTap: () {
+                nextPageOnly(context: context, page: ProfileScreen());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("LogOut",
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              selected: false,
+              onTap: () async {
+                await FirebaseServices().SignOut();
+                nextPageOnly(context: context, page: LoginScreen());
+              },
+            ),
+          ],
+        ),
       ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('P a y m e n t s'),
+ actions: [
+          IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
+            onPressed: () async {
+              await FirebaseServices().SignOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
+            },
+          ),
+        ],
+
+      ),
+
       body: Column(
         children: <Widget>[
           Expanded(

@@ -9,10 +9,10 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../services/firebase_services.dart';
 import '../utils/routers.dart';
-import 'cart_page.dart';
+import '../pages/cart_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
-import 'products_Page.dart';
+import '../pages/products_Page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);

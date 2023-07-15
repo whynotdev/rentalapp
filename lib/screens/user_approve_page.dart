@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rentalapp/screens/products_Page.dart';
-import 'package:rentalapp/screens/profile_Page.dart';
+import 'package:rentalapp/pages/products_Page.dart';
+import 'package:rentalapp/pages/profile_Page.dart';
 import 'package:rentalapp/screens/user_approve_page.dart';
 
 import '../services/firebase_services.dart';
 import '../utils/routers.dart';
-import 'cart_page.dart';
+import '../pages/cart_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 

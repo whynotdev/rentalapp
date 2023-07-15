@@ -4,15 +4,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rentalapp/screens/cart_page.dart';
+import 'package:rentalapp/pages/cart_page.dart';
 import 'package:rentalapp/screens/login_page.dart';
-import 'package:rentalapp/screens/products_Page.dart';
-import 'package:rentalapp/screens/profile_Page.dart';
+import 'package:rentalapp/pages/products_Page.dart';
+import 'package:rentalapp/pages/profile_Page.dart';
+import 'package:rentalapp/screens/rent_page.dart';
 import 'package:rentalapp/services/firebase_services.dart';
 import 'package:rentalapp/utils/routers.dart';
 import '../helperWidget/category.dart';
-import 'rent_page.dart';
-import 'borrow_page.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -38,6 +38,16 @@ class _HomePageState extends State<HomePage> {
     CartPage(),
     ProfileScreen(),
   ];
+  
+  List<Category> categories = [
+    Category(name: 'Film & Photography', imagePath: 'assets/ctgry3.jpg'),
+    Category(name: 'Lenses', imagePath: 'assets/lenses.png'),
+    Category(name: 'Laptop', imagePath: 'assets/laptop.png'),
+    Category(name: 'Electronic', imagePath: 'assets/elce.png'),
+    Category(name: 'Drone', imagePath: 'assets/drone.jpeg'),
+    Category(name: 'Musical Inst', imagePath: 'assets/guiter.png'),
+  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,11 +87,10 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text("Home",
-              style: TextStyle(fontWeight: FontWeight.bold),
-              
+              title: Text(
+                "Home",
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              
               selected: true,
               onTap: () {
                 nextPageOnly(context: context, page: HomePage());
@@ -89,8 +98,9 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.shopping_cart),
-              title: Text("Products",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+              title: Text(
+                "Products",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
               selected: false,
               onTap: () {
@@ -104,8 +114,10 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.shopping_basket),
-              title: Text("Cart",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Cart",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: CartPage());
@@ -113,8 +125,10 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.person),
-              title: Text("Profile",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Profile",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: ProfileScreen());
@@ -122,8 +136,10 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text("LogOut",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "LogOut",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () async {
                 await FirebaseServices().SignOut();
@@ -136,7 +152,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('H o m e'),
-        //automaticallyImplyLeading: false, // This line removes the back button
         actions: [
           IconButton(
             icon: Icon(
@@ -146,12 +161,11 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               await FirebaseServices().SignOut();
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ));
-
-              // TODO: Logout functionality here
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
             },
           ),
         ],
@@ -161,7 +175,6 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 25,
           ),
-          // Add the CarouselSlider widget to the homepage
           CarouselSlider(
             options: CarouselOptions(
               height: 210,
@@ -186,8 +199,6 @@ class _HomePageState extends State<HomePage> {
             }).toList(),
           ),
           SizedBox(height: 20),
-
-          //categories diplay on top to product categories
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Column(
@@ -196,26 +207,108 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(child: CategoryWidget(category: categories[0])),
-                    Expanded(child: CategoryWidget(category: categories[1])),
-                    Expanded(child: CategoryWidget(category: categories[2])),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                selectedCategory: categories[0].name,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CategoryWidget(category: categories[0]),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                selectedCategory: categories[1].name,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CategoryWidget(category: categories[1]),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                selectedCategory: categories[2].name,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CategoryWidget(category: categories[2]),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(child: CategoryWidget(category: categories[3])),
-                    Expanded(child: CategoryWidget(category: categories[4])),
-                    Expanded(child: CategoryWidget(category: categories[5])),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                selectedCategory: categories[3].name,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CategoryWidget(category: categories[3]),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                selectedCategory: categories[4].name,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CategoryWidget(category: categories[4]),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                selectedCategory: categories[5].name,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CategoryWidget(category: categories[5]),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
-
           SizedBox(height: 10),
-          // Rent Now button
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -231,7 +324,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigate to the RentPage when the button is pressed
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => RentPage()),
@@ -253,16 +345,14 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
           SizedBox(height: 10),
-          // Rent Now button
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.only(bottom: 20),
                 child: Container(
-                   width: double.infinity,
+                  width: double.infinity,
                   height: 60,
                   margin: EdgeInsets.symmetric(horizontal: 40),
                   decoration: BoxDecoration(
@@ -271,12 +361,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigate to the RentPage when the button is pressed
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProductPage(selectedCategory: '')),
+                          builder: (context) =>
+                              ProductPage(selectedCategory: ''),
+                        ),
                       );
                     },
                     child: Text(
@@ -297,59 +387,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      /*  bottomNavigationBar: BottomNavigationBar(
-  items: [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.shop),
-      label: 'Products',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.shopping_cart),
-      label: 'Cart',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.person),
-      label: 'Profile',
-    ),
-  ],
-  currentIndex: _selectedIndex,
-  selectedItemColor: Colors.amber,
-  unselectedItemColor: Colors.black,
-  onTap: (index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 0) {
-      // Navigate to the HomePage when the home icon is pressed
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else if (index == 1) {
-      // Navigate to the ProductPage when the products icon is pressed
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProductPage(selectedCategory: '',)),
-      );
-    } else if (index == 2) {
-      // Navigate to the CartPage when the cart icon is pressed
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CartPage()),
-      );
-    } else if (index == 3) {
-      // Navigate to the ProfileScreen when the profile icon is pressed
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      );
-    }
-  },
-),*/
     );
   }
 }

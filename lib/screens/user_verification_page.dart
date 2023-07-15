@@ -15,6 +15,7 @@ class UserVerificationPage extends StatefulWidget {
   final String uid;
 
   const UserVerificationPage({Key? key, required this.uid}) : super(key: key);
+
   @override
   _UserVerificationPageState createState() => _UserVerificationPageState();
 }
@@ -28,7 +29,7 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
   final TextEditingController _aadharNumberController = TextEditingController();
 
   File? _selectedDocument;
-LocationData? _currentLocation;
+  LocationData? _currentLocation;
   bool _isLoading = false;
 
   @override
@@ -41,7 +42,8 @@ LocationData? _currentLocation;
   }
 
   Future<void> _selectDocument() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _selectedDocument = File(pickedFile.path);
@@ -79,96 +81,104 @@ LocationData? _currentLocation;
   }
 
   Future<void> _submitVerificationRequest() async {
-  if (!_formKey.currentState!.validate()) {
-    return;
-  }
-
-  // Show loading indicator
-  setState(() {
-    _isLoading = true;
-  });
-
-  try {
-    // Get current location
-    final locationData = await _getCurrentLocation();
-    final latitude = locationData?.latitude;
-    final longitude = locationData?.longitude;
-
-    // Upload document image to Firebase Storage
-    final firebase_storage.Reference storageRef = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('verification_documents/${DateTime.now()}.jpg');
-    final firebase_storage.UploadTask uploadTask = storageRef.putFile(_selectedDocument!);
-    final firebase_storage.TaskSnapshot snapshot = await uploadTask.whenComplete(() => null);
-    final downloadUrl = await snapshot.ref.getDownloadURL();
-
-    // Store verification details in Firestore
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userId = user.uid;// Access the uid from the widget
-      final ownerUid = widget.uid;// Print the UID for testing purposes
-      print('UID: $ownerUid');
-
-      await FirebaseFirestore.instance.collection('verification').doc(userId).set({
-        'name': _nameController.text,
-        'phoneNumber': _phoneNumberController.text,
-        'address': _addressController.text,
-        'aadharNumber': _aadharNumberController.text,
-        'documentUrl': downloadUrl,
-        'latitude': latitude,
-        'longitude': longitude,
-        'status': 'Available',
-        "uid": FirebaseAuth.instance.currentUser!.uid,
-         'senduid': ownerUid,
-      });
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
 
-    // Show success message
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Verification Request Submitted'),
-          content: Text('Your verification request has been submitted successfully.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                nextPageOnly(context: context, page: HomePage()); // Navigate to the desired page
-              },
-            ),
-          ],
-        );
-      },
-      
-    );
-  } catch (error) {
-    // Show error message
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text('An error occurred while submitting your verification request. Please try again.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  } finally {
-    // Hide loading indicator
+    // Show loading indicator
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
     });
-  }
-}
 
+    try {
+      // Get current location
+      final locationData = await _getCurrentLocation();
+      final latitude = locationData?.latitude;
+      final longitude = locationData?.longitude;
+
+      // Upload document image to Firebase Storage
+      final firebase_storage.Reference storageRef = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('verification_documents/${DateTime.now()}.jpg');
+      final firebase_storage.UploadTask uploadTask =
+          storageRef.putFile(_selectedDocument!);
+      final firebase_storage.TaskSnapshot snapshot =
+          await uploadTask.whenComplete(() => null);
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Store verification details in Firestore
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userId = user.uid; // Access the uid from the widget
+        final ownerUid = widget.uid; // Print the UID for testing purposes
+        print('UID: $ownerUid');
+
+        await FirebaseFirestore.instance
+            .collection('verification')
+            .doc(userId)
+            .set({
+          'name': _nameController.text,
+          'phoneNumber': _phoneNumberController.text,
+          'address': _addressController.text,
+          'aadharNumber': _aadharNumberController.text,
+          'documentUrl': downloadUrl,
+          'latitude': latitude,
+          'longitude': longitude,
+          'status': 'Available',
+          "uid": FirebaseAuth.instance.currentUser!.uid,
+          'senduid': ownerUid,
+        });
+      }
+
+      // Show success message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Verification Request Submitted'),
+            content: Text(
+                'Your verification request has been submitted successfully.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  nextPageOnly(
+                      context: context,
+                      page: HomePage()); // Navigate to the desired page
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      // Show error message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text(
+                'An error occurred while submitting your verification request. Please try again.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      // Hide loading indicator
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,18 +252,17 @@ LocationData? _currentLocation;
                   },
                 ),
                 SizedBox(height: 16.0),
-                
                 ElevatedButton(
                   onPressed: _selectDocument,
-                  child: Text('Select Document',
-                   style: TextStyle(fontSize: 15),
+                  child: Text(
+                    'Select Document',
+                    style: TextStyle(fontSize: 15),
                   ),
                   style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                  
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 16.0),
                 _selectedDocument != null
@@ -267,8 +276,10 @@ LocationData? _currentLocation;
                     ? CircularProgressIndicator()
                     : ElevatedButton(
                         onPressed: _submitVerificationRequest,
-                        child: Text('Submit Request',
-                          style: TextStyle(fontSize: 15),),
+                        child: Text(
+                          'Submit Request',
+                          style: TextStyle(fontSize: 15),
+                        ),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),

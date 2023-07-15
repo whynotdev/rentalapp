@@ -4,22 +4,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rentalapp/pages/products_Page.dart';
 import 'package:rentalapp/screens/view_product_page.dart';
 import 'package:rentalapp/pages/profile_Page.dart';
 import 'package:rentalapp/services/firebase_services.dart';
 import '../utils/routers.dart';
-import '../pages/cart_page.dart';
-import 'edit_product_page.dart';
-import 'home_page.dart';
-import 'login_page.dart';
+import 'cart_page.dart';
+import '../screens/edit_product_page.dart';
+import '../screens/home_page.dart';
+import '../screens/login_page.dart';
 
-class YourProducts extends StatelessWidget {
+class ProductPage extends StatelessWidget {
   final String selectedCategory;
 
-  YourProducts({required this.selectedCategory});
+  ProductPage({required this.selectedCategory});
 
-  String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+  String currUSer = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,8 @@ class YourProducts extends StatelessWidget {
       backgroundColor: Color.fromARGB(255, 238, 238, 238),
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Your Products'),
+        title: Text('P r o d u c t s'),
+        //automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(
@@ -41,6 +41,8 @@ class YourProducts extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => LoginScreen(),
                   ));
+
+              // TODO: Logout functionality here
             },
           ),
         ],
@@ -94,7 +96,7 @@ class YourProducts extends StatelessWidget {
                 "Products",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              selected: false,
+              selected: true,
               onTap: () {
                 nextPageOnly(
                   context: context,
@@ -121,7 +123,7 @@ class YourProducts extends StatelessWidget {
                 "Profile",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              selected: true,
+              selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: ProfileScreen());
               },
@@ -142,7 +144,7 @@ class YourProducts extends StatelessWidget {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: getProductsStream(selectedCategory, currentUserUid),
+        stream: getProductsStream(selectedCategory),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -153,6 +155,9 @@ class YourProducts extends StatelessWidget {
           }
 
           final docs = snapshot.data?.docs;
+
+          CollectionReference dr =
+              FirebaseFirestore.instance.collection("rents");
 
           if (docs == null || docs.isEmpty) {
             return Center(
@@ -187,6 +192,7 @@ class YourProducts extends StatelessWidget {
               final productName = data['productName'] as String?;
               final price = data['price'] as double?;
               final uploaderUid = data['uid'].toString();
+              final status = data['status'] as String? ?? 'Available';
 
               print(uploaderUid);
               return Card(
@@ -217,7 +223,7 @@ class YourProducts extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         price != null
-                            ? '\$${price.toStringAsFixed(2)}/day'
+                            ? '\Rs${price.toStringAsFixed(2)}/day'
                             : 'Price not available',
                         style: TextStyle(
                           fontSize: 14,
@@ -225,110 +231,148 @@ class YourProducts extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color:
+                              status == 'Available' ? Colors.green : Colors.red,
+                        ),
+                        child: Text(
+                          status,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Edit and delete icons
+                    //if (true) // Replace this condition with your logic to determine if the user can edit/delete the product
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Tooltip(
-                          message: 'Edit the product',
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.blue,
-                            ),
-                            onPressed: () async {
-                              DocumentReference productRef = FirebaseFirestore
-                                  .instance
-                                  .collection('rents')
-                                  .doc(id);
+                        uploaderUid == currUSer
+                            ? Tooltip(
+                                message: 'Edit the product',
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () async {
+                                    // Get the document reference for the product
+                                    DocumentReference productRef =
+                                        FirebaseFirestore.instance
+                                            .collection('rents')
+                                            .doc(id);
 
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditProductPage(productRef: productRef),
+                                    // Navigate to the edit product page and pass the product reference
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditProductPage(
+                                            productRef: productRef),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        ),
-                        Tooltip(
-                          message: 'Delete the product',
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.purple,
-                            ),
-                            onPressed: () async {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      'Confirm Delete',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    content: Text(
-                                      'Are you sure you want to delete this product?',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            fontSize: 16,
+                              )
+                            : Container(),
+                        //ternary operator
+                        uploaderUid == currUSer
+                            ? Tooltip(
+                                message: 'Delete the product',
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.purple,
+                                  ),
+                                  onPressed: () async {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Confirm Delete',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: Text(
-                                          'Delete',
-                                          style: TextStyle(
-                                            fontSize: 16,
+                                          content: Text(
+                                            'Are you sure you want to delete this product?',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                            ),
                                           ),
-                                        ),
-                                        onPressed: () async {
-                                          await FirebaseFirestore.instance
-                                              .collection("rents")
-                                              .doc(id)
-                                              .delete();
-                                          Navigator.of(context).pop();
-                                          Fluttertoast.showToast(
-                                            msg: 'Deleted successfully',
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.CENTER,
-                                            backgroundColor: Colors.grey[600],
-                                            textColor: Colors.white,
-                                            fontSize: 16.0,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    backgroundColor: Colors.white,
-                                    elevation: 5,
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                  //color: Colors.grey,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                  //  color: Colors.red,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                await FirebaseFirestore.instance
+                                                    .collection("rents")
+                                                    .doc(id)
+                                                    .delete();
+                                                Navigator.of(context).pop();
+                                                Fluttertoast.showToast(
+                                                  msg: 'Deleted successfully',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.CENTER,
+                                                  backgroundColor:
+                                                      Colors.grey[600],
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          backgroundColor: Colors.white,
+                                          elevation: 5,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 90),
                       child: ElevatedButton(
                         onPressed: () {
+                          // Handle view details button click
+                          // You can navigate to another page or show a dialog with the details
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -338,7 +382,7 @@ class YourProducts extends StatelessWidget {
                         },
                         child: Center(
                             child: Text(
-                          'View Details',
+                          'Detailed view',
                           style: TextStyle(fontSize: 15),
                         )),
                         style: ElevatedButton.styleFrom(
@@ -358,18 +402,14 @@ class YourProducts extends StatelessWidget {
     );
   }
 
-  Stream<QuerySnapshot> getProductsStream(
-      String selectedCategory, String currentUserUid) {
+  Stream<QuerySnapshot> getProductsStream(String selectedCategory) {
     CollectionReference collection =
         FirebaseFirestore.instance.collection('rents');
 
     if (selectedCategory.isNotEmpty) {
-      return collection
-          .where('type', isEqualTo: selectedCategory)
-          .where('uid', isEqualTo: currentUserUid)
-          .snapshots();
+      return collection.where('type', isEqualTo: selectedCategory).snapshots();
     } else {
-      return collection.where('uid', isEqualTo: currentUserUid).snapshots();
+      return collection.snapshots();
     }
   }
 }

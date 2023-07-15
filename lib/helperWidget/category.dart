@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/products_Page.dart';
+import '../pages/products_Page.dart';
 
 class Category {
   final String name;
@@ -10,7 +10,7 @@ class Category {
 
 List<Category> categories = [
   Category(name: 'Film & Photography', imagePath: 'assets/ctgry3.jpg'),
-  Category(name: 'Lense', imagePath: 'assets/lenses.png'),
+  Category(name: 'Lenses', imagePath: 'assets/lenses.png'),
   Category(name: 'Laptop', imagePath: 'assets/laptop.png'),
   Category(name: 'Electronic', imagePath: 'assets/elce.png'),
   Category(name: 'Drone', imagePath: 'assets/drone.jpeg'),
@@ -27,16 +27,15 @@ class CategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        print(category.name);
-        // Navigate to the ProductsPage with the category name
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductPage(selectedCategory: category.name,/*category: category.name*/),
-          ),
-        );
-      },
+     onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProductPage(selectedCategory: category.name),
+    ),
+  );
+},
+
       child: Container(
         margin: EdgeInsets.all(10),
         height: 100,

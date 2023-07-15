@@ -212,7 +212,7 @@ class _RentPageState extends State<RentPage> {
                   height: 10,
                 ),
 
-                TextFormField(
+              /*  TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Contact No',
                     border: OutlineInputBorder(),
@@ -233,7 +233,7 @@ class _RentPageState extends State<RentPage> {
                     _contactController.text = Value!;
                   },
                   controller: _contactController,
-                ),
+                ),*/
                   SizedBox(height: 10,),
                 
                   

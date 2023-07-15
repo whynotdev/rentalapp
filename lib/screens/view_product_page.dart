@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rentalapp/helperWidget/availability.dart';
-import 'package:rentalapp/screens/cart_page.dart';
-import 'package:rentalapp/screens/products_Page.dart';
-import 'package:rentalapp/screens/profile_Page.dart';
+import 'package:rentalapp/pages/cart_page.dart';
+import 'package:rentalapp/pages/products_Page.dart';
+import 'package:rentalapp/pages/profile_Page.dart';
 import '../services/firebase_services.dart';
 import '../utils/routers.dart';
 import 'home_page.dart';
@@ -15,7 +15,9 @@ import 'login_page.dart';
 class ViewProducts extends StatefulWidget {
   const ViewProducts({Key? key});
 
+
   @override
+ 
   State<ViewProducts> createState() => _ViewProductsState();
 }
 
@@ -44,7 +46,7 @@ class _ViewProductsState extends State<ViewProducts> {
           ),
         ],
       ),
-       drawer: Drawer(
+      drawer: Drawer(
         child: ListView(
           children: [
             SizedBox(
@@ -209,9 +211,7 @@ class _ViewProductsState extends State<ViewProducts> {
                     ),
 
                     // Add availability button //this temp
-                   
 
-                    
                     //add to cart button
                     Center(
                       child: Padding(
@@ -243,39 +243,25 @@ class _ViewProductsState extends State<ViewProducts> {
     return FirebaseFirestore.instance.collection('rents').snapshots();
   }
 
- void addToCart(Map<String, dynamic> product) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    final userId = user.uid;
-    final ownerUid = product['uid'];
-    final cartItemsCollection = FirebaseFirestore.instance
-        .collection('cartitems')
-        .doc(userId)
-        .collection('products');
+  void addToCart(Map<String, dynamic> product) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final ownerUid = product['uid'];
+      final cartItemsCollection = FirebaseFirestore.instance
+          .collection('cartitems')
+          .doc(userId)
+          .collection('products');
 
-    // Check if the product is already in the user's cart
-    cartItemsCollection
-        .where('productId', isEqualTo: product['productId'])
-        .get()
-        .then((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        // Product already exists in cart
-        Fluttertoast.showToast(
-          msg: "Product already exists in cart",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey[600],
-          textColor: Colors.black,
-          fontSize: 16.0,
-        );
-      } else {
-        // Check if the owner UID is the same as the current user UID
-        if (ownerUid != userId) {
-          // Add the product to the user's cart
-          cartItemsCollection.add(product);
+      // Check if the product is already in the user's cart
+      cartItemsCollection
+          .where('productId', isEqualTo: product['productId'])
+          .get()
+          .then((snapshot) {
+        if (snapshot.docs.isNotEmpty) {
+          // Product already exists in cart
           Fluttertoast.showToast(
-            msg: "Added Successfully to Cart",
+            msg: "Product already exists in cart",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -284,31 +270,44 @@ class _ViewProductsState extends State<ViewProducts> {
             fontSize: 16.0,
           );
         } else {
-          // The owner is the current user
-          Fluttertoast.showToast(
-            msg: "You are the owner of this product",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.grey[600],
-            textColor: Colors.black,
-            fontSize: 16.0,
-          );
+          // Check if the owner UID is the same as the current user UID
+          if (ownerUid != userId) {
+            // Add the product to the user's cart
+            cartItemsCollection.add(product);
+            Fluttertoast.showToast(
+              msg: "Added Successfully to Cart",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.grey[600],
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+          } else {
+            // The owner is the current user
+            Fluttertoast.showToast(
+              msg: "You are the owner of this product",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.grey[600],
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+          }
         }
-      }
-    }).catchError((error) {
-      // Error occurred while checking for product in cart
-      Fluttertoast.showToast(
-        msg: "An error occurred. Please try again.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey[600],
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
-    });
+      }).catchError((error) {
+        // Error occurred while checking for product in cart
+        Fluttertoast.showToast(
+          msg: "An error occurred. Please try again.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey[600],
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
+      });
+    }
   }
-}
-
 }
