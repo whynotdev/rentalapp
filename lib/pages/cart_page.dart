@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rentalapp/screens/user_verification_page.dart';
 import 'package:rentalapp/screens/view_product_page.dart';
 import 'package:rentalapp/screens/login_page.dart';
-import 'package:rentalapp/screens/payment_page.dart';
 import 'package:rentalapp/pages/products_Page.dart';
 import 'package:rentalapp/pages/profile_Page.dart';
 import 'package:rentalapp/services/firebase_services.dart';

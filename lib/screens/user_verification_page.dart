@@ -82,26 +82,26 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
     // Get the current location
     return await location.getLocation();
   }
-
-  Future<void> _selectDateRange(BuildContext context) async {
-    final initialDateRange = DateTimeRange(
-      start: DateTime.now(),
-      end: DateTime.now().add(Duration(days: 7)),
-    );
-
-    final selectedDateRange = await showDateRangePicker(
-      context: context,
-      initialDateRange: initialDateRange,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-
-    if (selectedDateRange != null) {
-      setState(() {
-        _selectedDateRange = selectedDateRange;
-      });
-    }
+String _dateRangeText = 'Select Date Range';
+ Future<void> _selectDateRange(BuildContext context) async {
+  final currentDate = DateTime.now();
+  final initialDateRange = DateTimeRange(
+    start: currentDate,
+    end: currentDate,
+  );
+final selectedDateRange = await showDateRangePicker(
+    context: context,
+    initialDateRange: initialDateRange,
+    firstDate: currentDate,
+    lastDate: DateTime.now().add(Duration(days: 365)),
+  );
+if (selectedDateRange != null) {
+    setState(() {
+      _selectedDateRange = selectedDateRange;
+      _dateRangeText = 'Selected Date Range: ${selectedDateRange.start.toLocal().toString().split(' ')[0]} to ${selectedDateRange.end.toLocal().toString().split(' ')[0]}';
+    });
   }
+}
 
   Future<void> _submitVerificationRequest() async {
     if (!_formKey.currentState!.validate()) {
@@ -310,7 +310,7 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
                 ElevatedButton(
                   onPressed: () => _selectDateRange(context),
                   child: Text(
-                    'Select Date Range',
+                    _dateRangeText,
                     style: TextStyle(fontSize: 15),
                   ),
                   style: ElevatedButton.styleFrom(
