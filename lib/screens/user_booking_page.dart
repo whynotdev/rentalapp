@@ -24,7 +24,6 @@ class BookingRequestPage extends StatelessWidget {
         child: ListView(
           children: [
             const SizedBox(
-              
               height: 20,
             ),
             const Text(
@@ -132,9 +131,21 @@ class BookingRequestPage extends StatelessWidget {
           final docs = snapshot.data?.docs;
 
           if (docs == null || docs.isEmpty) {
-            return const Center(
-              child: Text(
-                "",
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 100),
+                  Text(
+                    'Uh-oh! Nothing to display',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20),
+                  SvgPicture.asset(
+                    "assets/lol.svg",
+                    height: 300,
+                  ),
+                ],
               ),
             );
           }
@@ -148,34 +159,14 @@ class BookingRequestPage extends StatelessWidget {
               final aadharNumber = data['aadharNumber'] as String?;
               final address = data['address'] as String?;
               final documentUrl = data['documentUrl'] as String?;
-               final sendUid = data['senduid'] as String?;
+              final sendUid = data['senduid'] as String?;
 // Compare sendUid with the current user's UID
-    // Compare sendUid with the current user's UID
- if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
-  // Skip this verification request if sendUid is not equal to the current user's UID
-  return Align(
-    alignment: Alignment.bottomCenter,
-    child: Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 100,),
-          Text(
-            'Uh-oh! Nothing to display',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
-          SvgPicture.asset(
-            "assets/lol.svg",
-            height: 300,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-  
+              // Compare sendUid with the current user's UID
+              if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
+                // Skip this verification request if sendUid is not equal to the current user's UID
+                return SizedBox();
+              }
+
               return Container(
                 margin: const EdgeInsets.all(10),
                 padding: const EdgeInsets.all(10),
@@ -196,8 +187,8 @@ class BookingRequestPage extends StatelessWidget {
                   children: [
                     Text(
                       'Name: $name',
-                      style:
-                          const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -218,7 +209,6 @@ class BookingRequestPage extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         // Implement zoom functionality for the document image
-                        
                       },
                       child: Image.network(
                         documentUrl ?? '',
@@ -321,8 +311,8 @@ void approveVerification(BuildContext context, String verificationId) async {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Verification Approved'),
-          content:
-              const Text('The verification request has been approved successfully.'),
+          content: const Text(
+              'The verification request has been approved successfully.'),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),

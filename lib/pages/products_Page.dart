@@ -193,7 +193,7 @@ class ProductPage extends StatelessWidget {
               final price = data['price'] as double?;
               final uploaderUid = data['uid'].toString();
               final status = data['status'] as String? ?? 'Available';
-
+              final ownerName = data['ownerName'] as String?;
               print(uploaderUid);
               return Card(
                 elevation: 4,
@@ -231,6 +231,16 @@ class ProductPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                     Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                ownerName ?? 'Owner Name',
+                 style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(

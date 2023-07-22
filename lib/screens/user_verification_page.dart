@@ -27,9 +27,11 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _aadharNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   File? _selectedDocument;
   LocationData? _currentLocation;
+  DateTimeRange? _selectedDateRange;
   bool _isLoading = false;
 
   @override
@@ -38,6 +40,7 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
     _phoneNumberController.dispose();
     _addressController.dispose();
     _aadharNumberController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -78,6 +81,26 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
 
     // Get the current location
     return await location.getLocation();
+  }
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    final initialDateRange = DateTimeRange(
+      start: DateTime.now(),
+      end: DateTime.now().add(Duration(days: 7)),
+    );
+
+    final selectedDateRange = await showDateRangePicker(
+      context: context,
+      initialDateRange: initialDateRange,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+
+    if (selectedDateRange != null) {
+      setState(() {
+        _selectedDateRange = selectedDateRange;
+      });
+    }
   }
 
   Future<void> _submitVerificationRequest() async {
@@ -122,10 +145,15 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
           'phoneNumber': _phoneNumberController.text,
           'address': _addressController.text,
           'aadharNumber': _aadharNumberController.text,
+          'email': _emailController.text,
           'documentUrl': downloadUrl,
           'latitude': latitude,
           'longitude': longitude,
           'status': 'Available',
+          'dateRange': {
+            'start': _selectedDateRange?.start,
+            'end': _selectedDateRange?.end,
+          },
           "uid": FirebaseAuth.instance.currentUser!.uid,
           'senduid': ownerUid,
         });
@@ -252,10 +280,37 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
                   },
                 ),
                 SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(labelText: 'Email'),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your email address.';
+                    } else if (!value.contains('@')) {
+                      return 'Please enter a valid email address.';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: _selectDocument,
                   child: Text(
                     'Select Document',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () => _selectDateRange(context),
+                  child: Text(
+                    'Select Date Range',
                     style: TextStyle(fontSize: 15),
                   ),
                   style: ElevatedButton.styleFrom(

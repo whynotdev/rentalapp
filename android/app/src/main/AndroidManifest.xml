@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.rentalapp">
    <application
-        android:label="rentalapp"
+        android:label="Rento"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
