@@ -8,12 +8,14 @@ import 'package:rentalapp/pages/cart_page.dart';
 import 'package:rentalapp/pages/products_Page.dart';
 import 'package:rentalapp/pages/profile_Page.dart';
 import '../services/firebase_services.dart';
+import '../utils/addcart.dart';
 import '../utils/routers.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 
 class ViewProducts extends StatefulWidget {
-  const ViewProducts({Key? key});
+    final String productId;
+ const ViewProducts({Key? key, required this.productId}) : super(key: key);
 
 
   @override
@@ -239,75 +241,10 @@ class _ViewProductsState extends State<ViewProducts> {
     );
   }
 
-  Stream<QuerySnapshot> getProductsStream() {
-    return FirebaseFirestore.instance.collection('rents').snapshots();
-  }
-
-  void addToCart(Map<String, dynamic> product) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userId = user.uid;
-      final ownerUid = product['uid'];
-      final cartItemsCollection = FirebaseFirestore.instance
-          .collection('cartitems')
-          .doc(userId)
-          .collection('products');
-
-      // Check if the product is already in the user's cart
-      cartItemsCollection
-          .where('productId', isEqualTo: product['productId'])
-          .get()
-          .then((snapshot) {
-        if (snapshot.docs.isNotEmpty) {
-          // Product already exists in cart
-          Fluttertoast.showToast(
-            msg: "Product already exists in cart",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.grey[600],
-            textColor: Colors.black,
-            fontSize: 16.0,
-          );
-        } else {
-          // Check if the owner UID is the same as the current user UID
-          if (ownerUid != userId) {
-            // Add the product to the user's cart
-            cartItemsCollection.add(product);
-            Fluttertoast.showToast(
-              msg: "Added Successfully to Cart",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.grey[600],
-              textColor: Colors.black,
-              fontSize: 16.0,
-            );
-          } else {
-            // The owner is the current user
-            Fluttertoast.showToast(
-              msg: "You are the owner of this product",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.grey[600],
-              textColor: Colors.black,
-              fontSize: 16.0,
-            );
-          }
-        }
-      }).catchError((error) {
-        // Error occurred while checking for product in cart
-        Fluttertoast.showToast(
-          msg: "An error occurred. Please try again.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey[600],
-          textColor: Colors.black,
-          fontSize: 16.0,
-        );
-      });
-    }
-  }
+Stream<QuerySnapshot> getProductsStream() {
+  return FirebaseFirestore.instance
+      .collection('rents')
+      .where(FieldPath.documentId, isEqualTo: widget.productId)
+      .snapshots();
+}
 }

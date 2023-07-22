@@ -231,16 +231,16 @@ class ProductPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                     Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                ownerName ?? 'Owner Name',
-                 style: TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ownerName ?? 'Owner Name',
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -382,19 +382,22 @@ class ProductPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // Handle view details button click
-                          // You can navigate to another page or show a dialog with the details
+                          String productId =
+                              id; // Get the productId from the current product's id
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewProducts(),
+                              builder: (context) =>
+                                  ViewProducts(productId: productId),
                             ),
                           );
                         },
                         child: Center(
-                            child: Text(
-                          'Detailed view',
-                          style: TextStyle(fontSize: 15),
-                        )),
+                          child: Text(
+                            'Detailed view',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
