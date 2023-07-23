@@ -13,8 +13,10 @@ import '../utils/routers.dart';
 
 class UserVerificationPage extends StatefulWidget {
   final String uid;
+  final String pdi;
 
-  const UserVerificationPage({Key? key, required this.uid}) : super(key: key);
+  const UserVerificationPage({Key? key, required this.uid, required this.pdi})
+      : super(key: key);
 
   @override
   _UserVerificationPageState createState() => _UserVerificationPageState();
@@ -82,26 +84,28 @@ class _UserVerificationPageState extends State<UserVerificationPage> {
     // Get the current location
     return await location.getLocation();
   }
-String _dateRangeText = 'Select Date Range';
- Future<void> _selectDateRange(BuildContext context) async {
-  final currentDate = DateTime.now();
-  final initialDateRange = DateTimeRange(
-    start: currentDate,
-    end: currentDate,
-  );
-final selectedDateRange = await showDateRangePicker(
-    context: context,
-    initialDateRange: initialDateRange,
-    firstDate: currentDate,
-    lastDate: DateTime.now().add(Duration(days: 365)),
-  );
-if (selectedDateRange != null) {
-    setState(() {
-      _selectedDateRange = selectedDateRange;
-      _dateRangeText = 'Selected Date Range: ${selectedDateRange.start.toLocal().toString().split(' ')[0]} to ${selectedDateRange.end.toLocal().toString().split(' ')[0]}';
-    });
+
+  String _dateRangeText = 'Select Date Range';
+  Future<void> _selectDateRange(BuildContext context) async {
+    final currentDate = DateTime.now();
+    final initialDateRange = DateTimeRange(
+      start: currentDate,
+      end: currentDate,
+    );
+    final selectedDateRange = await showDateRangePicker(
+      context: context,
+      initialDateRange: initialDateRange,
+      firstDate: currentDate,
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (selectedDateRange != null) {
+      setState(() {
+        _selectedDateRange = selectedDateRange;
+        _dateRangeText =
+            'Selected Date Range: ${selectedDateRange.start.toLocal().toString().split(' ')[0]} to ${selectedDateRange.end.toLocal().toString().split(' ')[0]}';
+      });
+    }
   }
-}
 
   Future<void> _submitVerificationRequest() async {
     if (!_formKey.currentState!.validate()) {
@@ -135,12 +139,11 @@ if (selectedDateRange != null) {
       if (user != null) {
         final userId = user.uid; // Access the uid from the widget
         final ownerUid = widget.uid; // Print the UID for testing purposes
+        final productUid = widget.pdi;
         print('UID: $ownerUid');
+        print('PDI: $productUid');
 
-        await FirebaseFirestore.instance
-            .collection('verification')
-            .doc(userId)
-            .set({
+        await FirebaseFirestore.instance.collection('verification').add({
           'name': _nameController.text,
           'phoneNumber': _phoneNumberController.text,
           'address': _addressController.text,
@@ -156,6 +159,7 @@ if (selectedDateRange != null) {
           },
           "uid": FirebaseAuth.instance.currentUser!.uid,
           'senduid': ownerUid,
+          'pdi': productUid, // Store the product UID (pdi)
         });
       }
 

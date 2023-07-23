@@ -22,6 +22,7 @@ class FirebaseServices {
       throw e;
     }
   }
+
   // Code for Signout user completly
   SignOut() async {
     await _auth.signOut();

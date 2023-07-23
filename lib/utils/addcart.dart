@@ -72,5 +72,3 @@ void addToCart(Map<String, dynamic> product) {
     });
   }
 }
-
-

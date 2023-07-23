@@ -14,12 +14,10 @@ import 'home_page.dart';
 import 'login_page.dart';
 
 class ViewProducts extends StatefulWidget {
-    final String productId;
- const ViewProducts({Key? key, required this.productId}) : super(key: key);
-
+  final String productId;
+  const ViewProducts({Key? key, required this.productId}) : super(key: key);
 
   @override
- 
   State<ViewProducts> createState() => _ViewProductsState();
 }
 
@@ -241,10 +239,10 @@ class _ViewProductsState extends State<ViewProducts> {
     );
   }
 
-Stream<QuerySnapshot> getProductsStream() {
-  return FirebaseFirestore.instance
-      .collection('rents')
-      .where(FieldPath.documentId, isEqualTo: widget.productId)
-      .snapshots();
-}
+  Stream<QuerySnapshot> getProductsStream() {
+    return FirebaseFirestore.instance
+        .collection('rents')
+        .where(FieldPath.documentId, isEqualTo: widget.productId)
+        .snapshots();
+  }
 }

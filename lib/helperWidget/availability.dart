@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class AvailabilityScreen extends StatefulWidget {
   final Map<String, dynamic> data;
 
-  AvailabilityScreen({required this.data, required Map<String, dynamic> product});
+  AvailabilityScreen(
+      {required this.data, required Map<String, dynamic> product});
 
   @override
   _AvailabilityScreenState createState() => _AvailabilityScreenState();

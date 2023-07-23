@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rentalapp/screens/home_page.dart';
+import 'package:uuid/uuid.dart';
 
 import '../utils/routers.dart';
 
@@ -212,7 +213,7 @@ class _RentPageState extends State<RentPage> {
                   height: 10,
                 ),
 
-              /*  TextFormField(
+                /*  TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Contact No',
                     border: OutlineInputBorder(),
@@ -234,9 +235,10 @@ class _RentPageState extends State<RentPage> {
                   },
                   controller: _contactController,
                 ),*/
-                  SizedBox(height: 10,),
-                
-                  
+                SizedBox(
+                  height: 10,
+                ),
+
                 //Upload Images button
                 Center(
                   child: Container(
@@ -302,6 +304,9 @@ class _RentPageState extends State<RentPage> {
 
                         try {
                           // Upload the image to Firebase Storage
+                          // Generate a unique identifier (PDI)
+                          String pdi = Uuid().v4();
+
                           if (_image != null) {
                             Reference ref = FirebaseStorage.instance
                                 .ref()
@@ -317,6 +322,8 @@ class _RentPageState extends State<RentPage> {
                             await FirebaseFirestore.instance
                                 .collection('rents')
                                 .add({
+                              'pdi':
+                                  pdi, // Include the PDI in the document data
                               'ownerName': _ownerNameController.text,
                               'productName': _productNameController.text,
                               'price': double.parse(_priceController.text),

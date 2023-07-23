@@ -27,22 +27,18 @@ class _SplashState extends State<Splash> {
     });
     return AnimatedSplashScreen(
       splash: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("R e n t o",
-          style: TextStyle ( 
-            fontSize: 40,
-            fontWeight:FontWeight.bold 
-            ),
+          Text(
+            "R e n t o",
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
           ),
         ],
       ),
       backgroundColor: Colors.amber,
-       nextScreen: const LoginScreen(),
-       splashIconSize:250,
-       splashTransition: SplashTransition.slideTransition,
-       
-
-       );
+      nextScreen: const LoginScreen(),
+      splashIconSize: 250,
+      splashTransition: SplashTransition.slideTransition,
+    );
   }
 }

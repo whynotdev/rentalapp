@@ -5,15 +5,67 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rentalapp/pages/products_Page.dart';
 import 'package:rentalapp/pages/profile_Page.dart';
-import 'package:rentalapp/screens/user_approve_page.dart';
-
 import '../services/firebase_services.dart';
 import '../utils/routers.dart';
 import '../pages/cart_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
+import 'package:intl/intl.dart';
 
 class BookingRequestPage extends StatelessWidget {
+  final TextEditingController commentController = TextEditingController();
+
+  void showCommentDialog(BuildContext context, String verificationId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add Comment'),
+          content: TextField(
+            controller: commentController,
+            decoration: InputDecoration(
+              labelText: 'Enter your comment...',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Save the comment to Firestore
+                saveComment(verificationId, commentController.text);
+
+                // Clear the text field after saving the comment
+                commentController.clear();
+
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void saveComment(String verificationId, String comment) {
+    FirebaseFirestore.instance
+        .collection('verification')
+        .doc(verificationId)
+        .update({'comment': comment});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,8 +181,16 @@ class BookingRequestPage extends StatelessWidget {
           }
 
           final docs = snapshot.data?.docs;
+          final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
-          if (docs == null || docs.isEmpty) {
+          // Filter verification requests based on the current user's UID
+          final verificationRequests = docs?.where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final sendUid = data['senduid'] as String?;
+            return sendUid == currentUserUid;
+          }).toList();
+
+          if (verificationRequests == null || verificationRequests.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -151,22 +211,34 @@ class BookingRequestPage extends StatelessWidget {
           }
 
           return ListView.builder(
-            itemCount: docs.length,
+            itemCount: verificationRequests.length,
             itemBuilder: (BuildContext context, int index) {
-              final data = docs[index].data() as Map<String, dynamic>;
+              final data =
+                  verificationRequests[index].data() as Map<String, dynamic>;
               final name = data['name'] as String?;
               final phoneNumber = data['phoneNumber'] as String?;
               final aadharNumber = data['aadharNumber'] as String?;
               final address = data['address'] as String?;
               final documentUrl = data['documentUrl'] as String?;
               final sendUid = data['senduid'] as String?;
-// Compare sendUid with the current user's UID
+              final email = data['email'] as String?;
+              final dateRangeStart = (data['dateRange'] as Map?)
+                  ?.cast<String, dynamic>()?['start'] as Timestamp?;
+              final dateRangeEnd = (data['dateRange'] as Map?)
+                  ?.cast<String, dynamic>()?['end'] as Timestamp?;
+              final formattedStartDate = dateRangeStart != null
+                  ? DateFormat('MMMM d, y')
+                      .format(dateRangeStart.toDate().toLocal())
+                  : 'Not Available';
+              final formattedEndDate = dateRangeEnd != null
+                  ? DateFormat('MMMM d, y')
+                      .format(dateRangeEnd.toDate().toLocal())
+                  : 'Not Available';
               // Compare sendUid with the current user's UID
               if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
                 // Skip this verification request if sendUid is not equal to the current user's UID
                 return SizedBox();
               }
-
               return Container(
                 margin: const EdgeInsets.all(10),
                 padding: const EdgeInsets.all(10),
@@ -206,6 +278,15 @@ class BookingRequestPage extends StatelessWidget {
                       style: const TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 10),
+                    Text(
+                      'Email: $email',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Date Range: $formattedStartDate to $formattedEndDate',
+                      style: const TextStyle(fontSize: 14),
+                    ),
                     GestureDetector(
                       onTap: () {
                         // Implement zoom functionality for the document image
@@ -217,23 +298,27 @@ class BookingRequestPage extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
+                    TextFormField(
+                      controller: commentController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Enter Remark...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // Handle approval functionality
-                        // You can update the status field in the verification collection to mark it as approved
-                        final verificationId =
-                            docs[index].id; // Get the verification document ID
+                        final verificationId = verificationRequests[index]
+                            .id; // Get the verification document ID
                         approveVerification(context, verificationId);
+                        print(verificationId);
+                        // Save the comment to Firestore
+                        saveComment(verificationId, commentController.text);
 
-                        // Navigate to the approved page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ApprovedPage(verificationId: verificationId),
-                          ),
-                        );
+                        // Clear the text field after saving the comment
+                        commentController.clear();
                       },
                       child: const Center(
                         child: Text(
@@ -247,6 +332,7 @@ class BookingRequestPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(height: 10),
                   ],
                 ),
               );
@@ -280,6 +366,7 @@ void approveVerification(BuildContext context, String verificationId) async {
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -305,6 +392,11 @@ void approveVerification(BuildContext context, String verificationId) async {
         .doc(userId)
         .set({'verificationId': verificationId});
 
+    await FirebaseFirestore.instance
+        .collection('rents')
+        .doc(verificationId)
+        .update({'status': 'approved'});
+
     // Show success message
     showDialog(
       context: context,
@@ -318,19 +410,12 @@ void approveVerification(BuildContext context, String verificationId) async {
               child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Return to the Profile page
               },
             ),
           ],
         );
       },
-    );
-
-    // Navigate to the approved page
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ApprovedPage(verificationId: verificationId),
-      ),
     );
   } catch (error) {
     // Show error message
@@ -353,4 +438,11 @@ void approveVerification(BuildContext context, String verificationId) async {
       },
     );
   }
+}
+
+void saveComment(String verificationId, String comment) {
+  FirebaseFirestore.instance
+      .collection('verification')
+      .doc(verificationId)
+      .update({'comment': comment});
 }

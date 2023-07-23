@@ -21,7 +21,6 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> cartItems = [];
-    
 
   @override
   void initState() {
@@ -210,8 +209,13 @@ class _CartPageState extends State<CartPage> {
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () { //nedd action
-                      nextPage(context: context, page: ViewProducts(productId: "",));
+                    onPressed: () {
+                      //nedd action
+                      nextPage(
+                          context: context,
+                          page: ViewProducts(
+                            productId: "",
+                          ));
                     },
                     child: Text('Go back to products'),
                     style: ElevatedButton.styleFrom(
@@ -301,38 +305,42 @@ class _CartPageState extends State<CartPage> {
   }
 
   void _showBuyDialog(int currentIndex) {
-  final selectedProduct = cartItems[currentIndex];
-  final productUid = selectedProduct['uid'] as String?;
-  print('Product UID: $productUid'); // Print the UID for testing purposes
+    final selectedProduct = cartItems[currentIndex];
+    final productUid = selectedProduct['uid'] as String?;
+    final productPdi = selectedProduct['pdi'] as String?;
+    print('Product UID: $productUid'); // Print the UID for testing purposes
+    print('Product PDI: $productPdi'); //Print the PDI for testing purposes
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Requesting product for Booking!'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              if (productUid != null) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => UserVerificationPage(uid: productUid),
-                  ),
-                );
-              }
-            },
-            child: Text('Send a Request'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Requesting product for Booking!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (productUid != null && productPdi != null) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => UserVerificationPage(
+                        uid: productUid,
+                        pdi: productPdi,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Text('Send a Request'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

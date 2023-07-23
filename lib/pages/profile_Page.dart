@@ -75,8 +75,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text("Home",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Home",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: HomePage());
@@ -84,8 +86,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               leading: Icon(Icons.shopping_cart),
-              title: Text("Products",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Products",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(
@@ -98,8 +102,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               leading: Icon(Icons.shopping_basket),
-              title: Text("Cart",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Cart",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: CartPage());
@@ -107,8 +113,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               leading: Icon(Icons.person),
-              title: Text("Profile",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Profile",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: true,
               onTap: () {
                 nextPageOnly(context: context, page: ProfileScreen());
@@ -116,8 +124,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text("LogOut",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "LogOut",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () async {
                 await FirebaseServices().SignOut();
@@ -129,14 +139,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       appBar: AppBar(
         centerTitle: true,
-        title:  Text(
-              "P r o f i l e",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
+        title: Text(
+          "P r o f i l e",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
         actions: [
           IconButton(
             icon: Icon(
@@ -158,10 +168,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-          
- SizedBox(height: 30),
-          SvgPicture.asset("assets/profile79.svg",
-          height: 200,),
+            SizedBox(height: 30),
+            SvgPicture.asset(
+              "assets/profile79.svg",
+              height: 200,
+            ),
             SizedBox(height: 20),
             Container(
               margin: EdgeInsets.only(bottom: 16.0),
@@ -193,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   size: 18,
                 ),
                 onTap: () {
-                   nextPage(context: context, page: UserProfilePage());
+                  nextPage(context: context, page: UserProfilePage());
                   // Navigate to Profile page
                 },
               ),
@@ -228,7 +239,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   size: 18,
                 ),
                 onTap: () {
-                   nextPage(context: context, page:YourProducts(selectedCategory: ""));// Navigate to "Your Products" page
+                  nextPage(
+                      context: context,
+                      page: YourProducts(
+                          selectedCategory:
+                              "")); // Navigate to "Your Products" page
                 },
               ),
             ),
@@ -264,42 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   // Navigate to "Booking Requests" page
 
-                   nextPage(context: context, page: BookingRequestPage());
-                },
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: 12.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                leading: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.amber,
-                ),
-                title: Container(
-                  color: Colors.grey[300],
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Approved Products",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.black,
-                  size: 18,
-                ),
-                onTap: () {
-                  // Navigate to "Approved Products" page
-                   nextPage(context: context, page: BookingRequestPage());
+                  nextPage(context: context, page: BookingRequestPage());
                 },
               ),
             ),
@@ -334,11 +314,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onTap: () {
                   // Navigate to "Approved Products" page
-                   nextPage(context: context, page: HomePage());
+                  nextPage(context: context, page: HomePage());
                 },
               ),
             ),
-              Container(
+            Container(
               margin: EdgeInsets.only(bottom: 12.0),
               decoration: BoxDecoration(
                 color: Colors.grey[300],
@@ -369,11 +349,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onTap: () {
                   // Navigate to "Approved Products" page
-                   nextPage(context: context, page: Payment_Page());
+                  nextPage(context: context, page: Payment_Page());
                 },
               ),
             ),
-            
           ],
         ),
       ),

@@ -13,7 +13,6 @@ import 'package:rentalapp/services/firebase_services.dart';
 import 'package:rentalapp/utils/routers.dart';
 import '../helperWidget/category.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -38,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     CartPage(),
     ProfileScreen(),
   ];
-  
+
   List<Category> categories = [
     Category(name: 'Film & Photography', imagePath: 'assets/ctgry3.jpg'),
     Category(name: 'Lenses', imagePath: 'assets/lenses.png'),
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     Category(name: 'Drone', imagePath: 'assets/drone.jpeg'),
     Category(name: 'Musical Inst', imagePath: 'assets/guiter.png'),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

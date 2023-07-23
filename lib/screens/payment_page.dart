@@ -59,14 +59,17 @@ class _Payment_PageState extends State<Payment_Page> {
     else if (apps!.length == 0)
       return Column(
         children: [
-          SizedBox(height: 80,),
+          SizedBox(
+            height: 80,
+          ),
           Text(
             "No apps found to handle transaction.",
-          
           ),
-         SizedBox(height: 20),
-          SvgPicture.asset("assets/upi.svg",
-          height: 200,), 
+          SizedBox(height: 20),
+          SvgPicture.asset(
+            "assets/upi.svg",
+            height: 200,
+          ),
         ],
       );
     else
@@ -189,8 +192,10 @@ class _Payment_PageState extends State<Payment_Page> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text("Home",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Home",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: HomePage());
@@ -198,8 +203,10 @@ class _Payment_PageState extends State<Payment_Page> {
             ),
             ListTile(
               leading: Icon(Icons.shopping_cart),
-              title: Text("Products",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Products",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(
@@ -212,8 +219,10 @@ class _Payment_PageState extends State<Payment_Page> {
             ),
             ListTile(
               leading: Icon(Icons.shopping_basket),
-              title: Text("Cart",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Cart",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () {
                 nextPageOnly(context: context, page: CartPage());
@@ -221,8 +230,10 @@ class _Payment_PageState extends State<Payment_Page> {
             ),
             ListTile(
               leading: Icon(Icons.person),
-              title: Text("Profile",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "Profile",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: true,
               onTap: () {
                 nextPageOnly(context: context, page: ProfileScreen());
@@ -230,8 +241,10 @@ class _Payment_PageState extends State<Payment_Page> {
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text("LogOut",
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              title: Text(
+                "LogOut",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
               selected: false,
               onTap: () async {
                 await FirebaseServices().SignOut();
@@ -244,7 +257,7 @@ class _Payment_PageState extends State<Payment_Page> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('P a y m e n t s'),
- actions: [
+        actions: [
           IconButton(
             icon: Icon(
               Icons.logout,
@@ -261,9 +274,7 @@ class _Payment_PageState extends State<Payment_Page> {
             },
           ),
         ],
-
       ),
-
       body: Column(
         children: <Widget>[
           Expanded(
@@ -272,7 +283,8 @@ class _Payment_PageState extends State<Payment_Page> {
           Expanded(
             child: FutureBuilder(
               future: _transaction,
-              builder: (BuildContext context, AsyncSnapshot<UpiResponse> snapshot) {
+              builder:
+                  (BuildContext context, AsyncSnapshot<UpiResponse> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError) {
                     return Center(

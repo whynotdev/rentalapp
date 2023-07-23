@@ -31,14 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.grey,
-            
                 child: IconButton(
                   onPressed: () async {
                     await FirebaseServices().SignInWithGoogle();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>  HomePage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomePage()));
                   },
                   icon: Image.asset("assets/google.png"),
                 ),

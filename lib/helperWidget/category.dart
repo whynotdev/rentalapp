@@ -27,15 +27,14 @@ class CategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-     onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ProductPage(selectedCategory: category.name),
-    ),
-  );
-},
-
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(selectedCategory: category.name),
+          ),
+        );
+      },
       child: Container(
         margin: EdgeInsets.all(10),
         height: 100,

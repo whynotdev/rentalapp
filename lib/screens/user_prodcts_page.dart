@@ -332,7 +332,9 @@ class YourProducts extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewProducts(productId: id,),
+                              builder: (context) => ViewProducts(
+                                productId: id,
+                              ),
                             ),
                           );
                         },
