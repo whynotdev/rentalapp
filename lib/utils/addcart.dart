@@ -27,8 +27,8 @@ void addToCart(Map<String, dynamic> product) {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey[600],
-          textColor: Colors.black,
+          backgroundColor: Colors.pink,
+        textColor: Colors.white,
           fontSize: 16.0,
         );
       } else {
@@ -41,8 +41,8 @@ void addToCart(Map<String, dynamic> product) {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: Colors.grey[600],
-            textColor: Colors.black,
+            backgroundColor: Colors.pink,
+        textColor: Colors.white,
             fontSize: 16.0,
           );
         } else {
@@ -52,8 +52,8 @@ void addToCart(Map<String, dynamic> product) {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: Colors.grey[600],
-            textColor: Colors.black,
+             backgroundColor: Colors.pink,
+        textColor: Colors.white,
             fontSize: 16.0,
           );
         }
@@ -65,8 +65,8 @@ void addToCart(Map<String, dynamic> product) {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey[600],
-        textColor: Colors.black,
+         backgroundColor: Colors.pink,
+        textColor: Colors.white,
         fontSize: 16.0,
       );
     });

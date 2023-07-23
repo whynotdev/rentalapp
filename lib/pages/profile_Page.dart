@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rentalapp/screens/home_page.dart';
 import 'package:rentalapp/screens/payment_page.dart';
 import 'package:rentalapp/pages/products_Page.dart';
 import 'package:rentalapp/screens/user_booking_page.dart';
+import 'package:rentalapp/screens/remark_page.dart';
 import 'package:rentalapp/screens/user_prodcts_page.dart';
 import 'package:rentalapp/screens/user_profile_page.dart';
 
@@ -59,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 20,
             ),
             SvgPicture.asset(
-              "assets/drawer.svg",
+              "assets/drawer3.svg",
               height: 200,
             ),
             SizedBox(
@@ -70,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Container(
                 height: 2.0,
                 width: 50,
-                color: Colors.amber,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -147,30 +149,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           textAlign: TextAlign.center,
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black,
-            ),
-            onPressed: () async {
-              await FirebaseServices().SignOut();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 20),
+            Text(
+              'Welcome to Rento',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 05),
+            Text(
+              'Where Joy Finds a Home!',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(height: 30),
             SvgPicture.asset(
-              "assets/profile79.svg",
+              "assets/profile80.svg",
               height: 200,
             ),
             SizedBox(height: 20),
@@ -184,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                 leading: Icon(
                   Icons.person,
-                  color: Colors.amber,
+                  color: Colors.pink,
                 ),
                 title: Container(
                   color: Colors.grey[300],
@@ -218,8 +219,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                 leading: Icon(
-                  Icons.home,
-                  color: Colors.amber,
+                  Icons.inventory_2,
+                  color: Colors.pink,
                 ),
                 title: Container(
                   color: Colors.grey[300],
@@ -256,8 +257,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                 leading: Icon(
-                  Icons.bookmark,
-                  color: Colors.amber,
+                  Icons.all_inbox_rounded,
+                  color: Colors.pink,
                 ),
                 title: Container(
                   color: Colors.grey[300],
@@ -292,14 +293,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                 leading: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.amber,
+                  Icons.speaker_notes,
+                  color: Colors.pink,
                 ),
                 title: Container(
                   color: Colors.grey[300],
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "Borrowed ",
+                    "Remarks",
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -314,7 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onTap: () {
                   // Navigate to "Approved Products" page
-                  nextPage(context: context, page: HomePage());
+                  nextPage(context: context, page: RemarkPage());
                 },
               ),
             ),
@@ -327,14 +328,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                 leading: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.amber,
+                  Icons.logout,
+                  color: Colors.pink,
                 ),
                 title: Container(
                   color: Colors.grey[300],
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "Payment Method",
+                    "Logout",
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -347,9 +348,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: Colors.black,
                   size: 18,
                 ),
-                onTap: () {
-                  // Navigate to "Approved Products" page
-                  nextPage(context: context, page: Payment_Page());
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  nextPage(context: context, page: LoginScreen());
                 },
               ),
             ),

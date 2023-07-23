@@ -49,7 +49,7 @@ class _Payment_PageState extends State<Payment_Page> {
       receiverName: 'Mr Arif Afajal',
       transactionRefId: 'TestingUpiIndiaPlugin',
       transactionNote: 'Not actual. Just an example.',
-      amount: 1.00,
+      amount: 2000.00,
     );
   }
 
@@ -176,7 +176,7 @@ class _Payment_PageState extends State<Payment_Page> {
               height: 20,
             ),
             SvgPicture.asset(
-              "assets/drawer.svg",
+              "assets/drawer3.svg",
               height: 200,
             ),
             SizedBox(
@@ -187,7 +187,7 @@ class _Payment_PageState extends State<Payment_Page> {
               child: Container(
                 height: 2.0,
                 width: 50,
-                color: Colors.amber,
+                 color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(

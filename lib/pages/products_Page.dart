@@ -28,7 +28,7 @@ class ProductPage extends StatelessWidget {
         centerTitle: true,
         title: Text('P r o d u c t s'),
         //automaticallyImplyLeading: false,
-        actions: [
+        /* actions: [
           IconButton(
             icon: Icon(
               Icons.logout,
@@ -45,7 +45,7 @@ class ProductPage extends StatelessWidget {
               // TODO: Logout functionality here
             },
           ),
-        ],
+        ],*/
       ),
       drawer: Drawer(
         child: ListView(
@@ -65,7 +65,7 @@ class ProductPage extends StatelessWidget {
               height: 20,
             ),
             SvgPicture.asset(
-              "assets/drawer.svg",
+              "assets/drawer3.svg",
               height: 200,
             ),
             SizedBox(
@@ -76,7 +76,7 @@ class ProductPage extends StatelessWidget {
               child: Container(
                 height: 2.0,
                 width: 50,
-                color: Colors.amber,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -170,7 +170,7 @@ class ProductPage extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   SvgPicture.asset(
-                    "assets/ghost.svg",
+                    "assets/ghost2.svg",
                     height: 300,
                   ),
                 ],
@@ -227,7 +227,6 @@ class ProductPage extends StatelessWidget {
                             : 'Price not available',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[700],
                         ),
                       ),
                     ),
@@ -236,7 +235,7 @@ class ProductPage extends StatelessWidget {
                       child: Text(
                         ownerName ?? 'Owner Name',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -354,8 +353,7 @@ class ProductPage extends StatelessWidget {
                                                   toastLength:
                                                       Toast.LENGTH_SHORT,
                                                   gravity: ToastGravity.CENTER,
-                                                  backgroundColor:
-                                                      Colors.grey[600],
+                                                  backgroundColor: Colors.pink,
                                                   textColor: Colors.white,
                                                   fontSize: 16.0,
                                                 );

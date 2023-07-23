@@ -49,6 +49,8 @@ dependencies:
   calendar_date_picker2: ^0.5.2
   upi_india: ^3.0.1
   location: ^4.4.0
+  uuid: ^3.0.7
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

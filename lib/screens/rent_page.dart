@@ -276,7 +276,7 @@ class _RentPageState extends State<RentPage> {
                                 children: const [
                                   Icon(
                                     Icons.image_rounded,
-                                    color: Colors.amber,
+                                    color: Colors.pink,
                                     size: 36.0,
                                   ),
                                   SizedBox(height: 8.0),
@@ -341,7 +341,7 @@ class _RentPageState extends State<RentPage> {
                               msg: 'Succefully! submitted',
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.CENTER,
-                              backgroundColor: Colors.grey[600],
+                              backgroundColor: Colors.pink,
                               textColor: Colors.white,
                               fontSize: 16.0,
                             );
@@ -350,7 +350,7 @@ class _RentPageState extends State<RentPage> {
                               msg: 'Please select an image',
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.grey[600],
+                              backgroundColor: Colors.pink,
                               textColor: Colors.white,
                               fontSize: 16.0,
                             );
@@ -361,7 +361,7 @@ class _RentPageState extends State<RentPage> {
                             msg: 'Failed to submit rent data',
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.grey[600],
+                            backgroundColor: Colors.pink,
                             textColor: Colors.white,
                             fontSize: 16.0,
                           );

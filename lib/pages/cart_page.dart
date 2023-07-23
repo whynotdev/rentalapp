@@ -78,18 +78,6 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('R e n t o'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout, color: Colors.black),
-            onPressed: () async {
-              await FirebaseServices().SignOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-          ),
-        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -109,7 +97,7 @@ class _CartPageState extends State<CartPage> {
               height: 20,
             ),
             SvgPicture.asset(
-              "assets/drawer.svg",
+              "assets/drawer3.svg",
               height: 200,
             ),
             SizedBox(
@@ -120,7 +108,7 @@ class _CartPageState extends State<CartPage> {
               child: Container(
                 height: 2.0,
                 width: 50,
-                color: Colors.amber,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -213,9 +201,7 @@ class _CartPageState extends State<CartPage> {
                       //nedd action
                       nextPage(
                           context: context,
-                          page: ViewProducts(
-                            productId: "",
-                          ));
+                          page: ProductPage(selectedCategory: ""));
                     },
                     child: Text('Go back to products'),
                     style: ElevatedButton.styleFrom(

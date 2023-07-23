@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
               height: 20,
             ),
             SvgPicture.asset(
-              "assets/drawer.svg",
+              "assets/drawer3.svg",
               height: 200,
             ),
             SizedBox(
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 height: 2.0,
                 width: 50,
-                color: Colors.amber,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -151,28 +151,11 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('H o m e'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black,
-            ),
-            onPressed: () async {
-              await FirebaseServices().SignOut();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: Column(
         children: [
           SizedBox(
-            height: 25,
+            height: 40,
           ),
           CarouselSlider(
             options: CarouselOptions(
@@ -197,7 +180,7 @@ class _HomePageState extends State<HomePage> {
               );
             }).toList(),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 30),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Column(
@@ -253,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -319,7 +302,8 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.symmetric(horizontal: 40),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: Colors.amber,
+                    color: Theme.of(context)
+                        .primaryColor, // Use the primary color from the app's theme
                   ),
                   child: ElevatedButton(
                     onPressed: () {
@@ -356,7 +340,7 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.symmetric(horizontal: 40),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: Colors.amber,
+                    color: Theme.of(context).primaryColor,
                   ),
                   child: ElevatedButton(
                     onPressed: () {

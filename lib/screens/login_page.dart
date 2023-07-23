@@ -17,30 +17,52 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "R e n t o",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    "R e n t o",
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-              SvgPicture.asset("assets/login.svg"),
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.grey,
-                child: IconButton(
-                  onPressed: () async {
-                    await FirebaseServices().SignInWithGoogle();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                  },
-                  icon: Image.asset("assets/google.png"),
+                SizedBox(
+                  height: 80,
                 ),
-              )
-            ],
+                Center(
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/login1.svg",
+                        height: 350,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.pink,
+                  child: IconButton(
+                    onPressed: () async {
+                      await FirebaseServices().SignInWithGoogle();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
+                    },
+                    icon: SvgPicture.asset("assets/google.svg"),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

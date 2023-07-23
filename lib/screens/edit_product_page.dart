@@ -174,8 +174,8 @@ class _EditProductPageState extends State<EditProductPage> {
         msg: 'Product updated successfully',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[600],
-        textColor: Colors.black,
+        backgroundColor: Colors.pink,
+        textColor: Colors.white,
         fontSize: 16.0,
       );
 
@@ -186,8 +186,8 @@ class _EditProductPageState extends State<EditProductPage> {
         msg: 'Failed to update product',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[600],
-        textColor: Colors.black,
+        backgroundColor: Colors.pink,
+        textColor: Colors.white,
         fontSize: 16.0,
       );
     }

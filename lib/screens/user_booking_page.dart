@@ -13,160 +13,79 @@ import 'login_page.dart';
 import 'package:intl/intl.dart';
 
 class BookingRequestPage extends StatelessWidget {
-  final TextEditingController commentController = TextEditingController();
+  final TextEditingController remarkController = TextEditingController();
 
-  void showCommentDialog(BuildContext context, String verificationId) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add Comment'),
-          content: TextField(
-            controller: commentController,
-            decoration: InputDecoration(
-              labelText: 'Enter your comment...',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 3,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Save the comment to Firestore
-                saveComment(verificationId, commentController.text);
+  Future<void> cancelRequest(
+    BuildContext context,
+    String verificationId,
+    String remarks,
+  ) async {
+    try {
+      // Change the verification status to "Available"
+      await FirebaseFirestore.instance
+          .collection('verification')
+          .doc(verificationId)
+          .update({'status': 'Available'});
 
-                // Clear the text field after saving the comment
-                commentController.clear();
+      // Get the user's ID
+      final userId = FirebaseAuth.instance.currentUser!.uid;
 
-                Navigator.of(context).pop();
-              },
-              child: Text('Save'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+      // Show success message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Request Cancelled'),
+            content: const Text('The verification request has been cancelled.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
               ),
-            ),
-          ],
-        );
-      },
-    );
+            ],
+          );
+        },
+      );
+
+      // Update the approvalStatus in the borrower collection
+      await FirebaseFirestore.instance
+          .collection('borrower')
+          .doc(verificationId)
+          .update({'approvalStatus': 'not approved'});
+    } catch (error) {
+      // Show error message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text(
+                'An error occurred while cancelling the request. Please try again.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
-  void saveComment(String verificationId, String comment) {
-    FirebaseFirestore.instance
-        .collection('verification')
-        .doc(verificationId)
-        .update({'comment': comment});
-  }
-
+  final String approved = 'approved';
+  final String notApproved = 'not approved';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Booking Requests'),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              "R e n t o",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SvgPicture.asset(
-              "assets/drawer.svg",
-              height: 200,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-              child: Container(
-                height: 2.0,
-                width: 50,
-                color: Colors.amber,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text(
-                "Home",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-              selected: false,
-              onTap: () {
-                nextPageOnly(context: context, page: HomePage());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.shopping_cart),
-              title: const Text(
-                "Products",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-              selected: false,
-              onTap: () {
-                nextPageOnly(
-                  context: context,
-                  page: ProductPage(
-                    selectedCategory: "",
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.shopping_basket),
-              title: const Text(
-                "Cart",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-              selected: false,
-              onTap: () {
-                nextPageOnly(context: context, page: const CartPage());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text(
-                "Profile",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-              selected: true,
-              onTap: () {
-                nextPageOnly(context: context, page: const ProfileScreen());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text(
-                "LogOut",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-              selected: false,
-              onTap: () async {
-                await FirebaseServices().SignOut();
-                nextPageOnly(context: context, page: const LoginScreen());
-              },
-            ),
-          ],
-        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream:
@@ -234,11 +153,12 @@ class BookingRequestPage extends StatelessWidget {
                   ? DateFormat('MMMM d, y')
                       .format(dateRangeEnd.toDate().toLocal())
                   : 'Not Available';
-              // Compare sendUid with the current user's UID
-              if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
-                // Skip this verification request if sendUid is not equal to the current user's UID
+              final borrowerId = data['uid']
+                  as String?; // Fetching the "uid" field and naming it as "borrowerId"
+              print('Borrower ID: $borrowerId');
+              /* if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
                 return SizedBox();
-              }
+              }*/
               return Container(
                 margin: const EdgeInsets.all(10),
                 padding: const EdgeInsets.all(10),
@@ -299,7 +219,7 @@ class BookingRequestPage extends StatelessWidget {
                       ),
                     ),
                     TextFormField(
-                      controller: commentController,
+                      controller: remarkController,
                       maxLines: 3,
                       decoration: InputDecoration(
                         labelText: 'Enter Remark...',
@@ -309,16 +229,36 @@ class BookingRequestPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () async {
-                        // Handle approval functionality
-                        final verificationId = verificationRequests[index]
-                            .id; // Get the verification document ID
-                        approveVerification(context, verificationId);
-                        print(verificationId);
-                        // Save the comment to Firestore
-                        saveComment(verificationId, commentController.text);
+                        final verificationId = verificationRequests[index].id;
+                        final remark = remarkController.text;
 
-                        // Clear the text field after saving the comment
-                        commentController.clear();
+                        if (remark.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Ayoo!'),
+                                content: const Text(
+                                    'Please enter a remark before proceeding.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+                        final sendUid = data['senduid'] as String;
+                        final borrowerId = data['uid'] as String;
+                        approveVerification(context, verificationId);
+                        saveRemark(verificationId, remark, sendUid, borrowerId,
+                            approved); // Save the remark to Firestore
+                        remarkController.clear();
                       },
                       child: const Center(
                         child: Text(
@@ -332,7 +272,52 @@ class BookingRequestPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 5),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final verificationId = verificationRequests[index].id;
+                        final remark = remarkController.text;
+                        if (remark.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Ayyo!'),
+                                content: const Text(
+                                    'Please enter a remark before proceeding.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        final sendUid = data['senduid'] as String;
+                        final borrowerId = data['uid'] as String;
+                        cancelRequest(context, verificationId, remark);
+                        saveRemark(verificationId, remark, sendUid, borrowerId,
+                            notApproved); // Save the remark to Firestore
+                        remarkController.clear();
+                      },
+                      child: const Center(
+                        child: Text(
+                          "Cancel Request",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -397,6 +382,12 @@ void approveVerification(BuildContext context, String verificationId) async {
         .doc(verificationId)
         .update({'status': 'approved'});
 
+    // Update the approvalStatus in the borrower collection
+    await FirebaseFirestore.instance
+        .collection('borrower')
+        .doc(verificationId)
+        .update({'approvalStatus': 'approved'});
+
     // Show success message
     showDialog(
       context: context,
@@ -440,9 +431,14 @@ void approveVerification(BuildContext context, String verificationId) async {
   }
 }
 
-void saveComment(String verificationId, String comment) {
-  FirebaseFirestore.instance
-      .collection('verification')
-      .doc(verificationId)
-      .update({'comment': comment});
+// Add the saveRemark function to save the remark in Firestore
+void saveRemark(String verificationId, String remark, String sendUid,
+    String borrowerId, String approvalStatus) {
+  FirebaseFirestore.instance.collection('borrower').add({
+    'verificationId': verificationId,
+    'remarks': remark,
+    'uid': borrowerId,
+    'senduid': sendUid,
+    'approvalStatus': approvalStatus,
+  });
 }
