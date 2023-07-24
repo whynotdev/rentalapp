@@ -37,9 +37,16 @@ class RemarkPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'No response from lender/You are not requested yet',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
+                    'No response from lender',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Or',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'You are not requested yet',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
                   SvgPicture.asset(

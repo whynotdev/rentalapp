@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -181,28 +182,64 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ElevatedButton(
               onPressed: () async {
                 if (_image != null) {
-                  // Call a function to upload and save the image
-                  final imageUrl = await uploadProfileImage(_image!);
+                  // Show a loading indicator while saving the profile
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
 
-                  // Update the profile data in Firestore
-                  final uid = FirebaseAuth.instance.currentUser?.uid;
+                  try {
+                    // Call a function to upload and save the image
+                    final imageUrl = await uploadProfileImage(_image!);
 
-                  if (uid != null) {
-                    await FirebaseFirestore.instance
-                        .collection('userprofile')
-                        .doc(uid)
-                        .set({
-                      'profileImage': imageUrl,
-                      'name': _nameController.text,
-                      'about': _aboutController.text,
-                      'phone': _phoneController.text,
-                      'location': _locationController.text,
-                    }, SetOptions(merge: true));
+                    // Update the profile data in Firestore
+                    final uid = FirebaseAuth.instance.currentUser?.uid;
 
-                    // Show a toast/notification indicating profile update success
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Profile updated successfully')),
+                    if (uid != null) {
+                      await FirebaseFirestore.instance
+                          .collection('userprofile')
+                          .doc(uid)
+                          .set({
+                        'profileImage': imageUrl,
+                        'name': _nameController.text,
+                        'about': _aboutController.text,
+                        'phone': _phoneController.text,
+                        'location': _locationController.text,
+                      }, SetOptions(merge: true));
+
+                      // Reset the _image variable to null after successful upload
+                      setState(() {
+                        _image = null;
+                      });
+
+                      // Show a toast/notification indicating profile update success
+                      Fluttertoast.showToast(
+                        msg: 'Profile updated successfully',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    }
+                  } catch (error) {
+                    // Handle error during profile update
+                    Fluttertoast.showToast(
+                      msg: 'An error occurred. Please try again.',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
                     );
+                  } finally {
+                    // Hide the loading indicator
+                    Navigator.of(context, rootNavigator: true).pop();
                   }
                 } else {
                   // Handle case when no image is selected

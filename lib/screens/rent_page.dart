@@ -341,7 +341,7 @@ class _RentPageState extends State<RentPage> {
                               msg: 'Succefully! submitted',
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.CENTER,
-                              backgroundColor: Colors.pink,
+                              backgroundColor: Colors.green,
                               textColor: Colors.white,
                               fontSize: 16.0,
                             );
@@ -350,7 +350,7 @@ class _RentPageState extends State<RentPage> {
                               msg: 'Please select an image',
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.pink,
+                              backgroundColor: Colors.orange,
                               textColor: Colors.white,
                               fontSize: 16.0,
                             );
@@ -361,7 +361,7 @@ class _RentPageState extends State<RentPage> {
                             msg: 'Failed to submit rent data',
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.pink,
+                            backgroundColor: Colors.red,
                             textColor: Colors.white,
                             fontSize: 16.0,
                           );

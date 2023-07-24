@@ -353,7 +353,7 @@ class ProductPage extends StatelessWidget {
                                                   toastLength:
                                                       Toast.LENGTH_SHORT,
                                                   gravity: ToastGravity.CENTER,
-                                                  backgroundColor: Colors.pink,
+                                                  backgroundColor: Colors.red,
                                                   textColor: Colors.white,
                                                   fontSize: 16.0,
                                                 );

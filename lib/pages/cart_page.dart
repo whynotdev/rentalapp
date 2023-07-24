@@ -183,7 +183,7 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    "assets/Empty.svg",
+                    "assets/Empty1.svg",
                     width: 250,
                     height: 300,
                   ),

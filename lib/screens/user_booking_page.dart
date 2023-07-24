@@ -114,12 +114,12 @@ class BookingRequestPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 100),
-                  Text(
+                  const SizedBox(height: 100),
+                  const Text(
                     'Uh-oh! Nothing to display',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SvgPicture.asset(
                     "assets/lol.svg",
                     height: 300,
@@ -139,7 +139,6 @@ class BookingRequestPage extends StatelessWidget {
               final aadharNumber = data['aadharNumber'] as String?;
               final address = data['address'] as String?;
               final documentUrl = data['documentUrl'] as String?;
-              final sendUid = data['senduid'] as String?;
               final email = data['email'] as String?;
               final dateRangeStart = (data['dateRange'] as Map?)
                   ?.cast<String, dynamic>()?['start'] as Timestamp?;
@@ -155,7 +154,7 @@ class BookingRequestPage extends StatelessWidget {
                   : 'Not Available';
               final borrowerId = data['uid']
                   as String?; // Fetching the "uid" field and naming it as "borrowerId"
-              print('Borrower ID: $borrowerId');
+            //  print('Borrower ID: $borrowerId');
               /* if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
                 return SizedBox();
               }*/
@@ -221,7 +220,7 @@ class BookingRequestPage extends StatelessWidget {
                     TextFormField(
                       controller: remarkController,
                       maxLines: 3,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Enter Remark...',
                         border: OutlineInputBorder(),
                       ),
@@ -272,7 +271,7 @@ class BookingRequestPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     ElevatedButton(
                       onPressed: () async {
                         final verificationId = verificationRequests[index].id;

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rentalapp/pages/products_Page.dart';
+import 'package:rentalapp/screens/rent_page.dart';
 import 'package:rentalapp/screens/view_product_page.dart';
 import 'package:rentalapp/pages/profile_Page.dart';
 import 'package:rentalapp/services/firebase_services.dart';
@@ -53,8 +54,23 @@ class YourProducts extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   SvgPicture.asset(
-                    "assets/ghost.svg",
+                    "assets/ghost2.svg",
                     height: 300,
+                  ),
+                   SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () {
+                      //nedd action
+                      nextPage(
+                          context: context,
+                          page: RentPage());
+                    },
+                    child: Text('Add your rentals now'),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -193,7 +209,7 @@ class YourProducts extends StatelessWidget {
                                             msg: 'Deleted successfully',
                                             toastLength: Toast.LENGTH_SHORT,
                                             gravity: ToastGravity.CENTER,
-                                            backgroundColor: Colors.grey[600],
+                                            backgroundColor: Colors.red,
                                             textColor: Colors.white,
                                             fontSize: 16.0,
                                           );
