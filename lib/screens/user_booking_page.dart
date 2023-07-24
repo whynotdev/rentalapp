@@ -14,23 +14,86 @@ import 'package:intl/intl.dart';
 
 class BookingRequestPage extends StatelessWidget {
   final TextEditingController remarkController = TextEditingController();
+Future<void> cancelRequest(
+  BuildContext context,
+  String verificationId,
+  String remarks,
+) async {
+  try {
+    // Fetch the verification data
+    final verificationSnapshot = await FirebaseFirestore.instance
+        .collection('verification')
+        .doc(verificationId)
+        .get();
 
-  Future<void> cancelRequest(
-    BuildContext context,
-    String verificationId,
-    String remarks,
-  ) async {
-    try {
-      // Change the verification status to "Available"
+    if (!verificationSnapshot.exists) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('The verification request was not found.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    // Get the "pdi" from the verification data
+    final verificationData = verificationSnapshot.data() as Map<String, dynamic>?;
+    final pdi = verificationData?['pdi'] as String?;
+
+    if (pdi == null) {
+      // "pdi" not found in verification data, handle the error
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('The "pdi" value was not found in verification data.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    // Update the verification status to "Available"
+    await FirebaseFirestore.instance
+        .collection('verification')
+        .doc(verificationId)
+        .update({'status': 'Available'});
+
+    // Update the "status" in the "rents" collection for the product with the matching "pdi"
+    final rentsQuerySnapshot = await FirebaseFirestore.instance
+        .collection('rents')
+        .where('pdi', isEqualTo: pdi)
+        .get();
+
+    final rentsDocs = rentsQuerySnapshot.docs;
+    if (rentsDocs.isNotEmpty) {
+      final rentDocId = rentsDocs[0].id; // Assuming there's only one matching document
       await FirebaseFirestore.instance
-          .collection('verification')
-          .doc(verificationId)
+          .collection('rents')
+          .doc(rentDocId)
           .update({'status': 'Available'});
-
-      // Get the user's ID
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-
-      // Show success message
+    }
+// Show success message
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -42,7 +105,7 @@ class BookingRequestPage extends StatelessWidget {
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Pops back to the previous screen
                 },
               ),
             ],
@@ -50,34 +113,30 @@ class BookingRequestPage extends StatelessWidget {
         },
       );
 
-      // Update the approvalStatus in the borrower collection
-      await FirebaseFirestore.instance
-          .collection('borrower')
-          .doc(verificationId)
-          .update({'approvalStatus': 'not approved'});
-    } catch (error) {
-      // Show error message
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text(
-                'An error occurred while cancelling the request. Please try again.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+    // Rest of your cancellation logic...
+
+  } catch (error) {
+    // Show error message
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: const Text('An error occurred while cancelling the request. Please try again.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
+}
+
 
   final String approved = 'approved';
   final String notApproved = 'not approved';
@@ -154,7 +213,7 @@ class BookingRequestPage extends StatelessWidget {
                   : 'Not Available';
               final borrowerId = data['uid']
                   as String?; // Fetching the "uid" field and naming it as "borrowerId"
-            //  print('Borrower ID: $borrowerId');
+              //  print('Borrower ID: $borrowerId');
               /* if (sendUid != FirebaseAuth.instance.currentUser!.uid) {
                 return SizedBox();
               }*/
@@ -375,11 +434,30 @@ void approveVerification(BuildContext context, String verificationId) async {
             'your_approval') // Change "your_approval" to the desired collection name
         .doc(userId)
         .set({'verificationId': verificationId});
+    // Update the status in the "rents" collection for the product with the matching "pdi"
 
-    await FirebaseFirestore.instance
-        .collection('rents')
-        .doc(verificationId)
-        .update({'status': 'approved'});
+    final verificationData =
+        verificationSnapshot.data() as Map<String, dynamic>?;
+    if (verificationData != null) {
+      final pdi = verificationData['pdi'] as String?;
+
+      if (pdi != null) {
+        final rentsQuerySnapshot = await FirebaseFirestore.instance
+            .collection('rents')
+            .where('pdi', isEqualTo: pdi)
+            .get();
+
+        final rentsDocs = rentsQuerySnapshot.docs;
+        if (rentsDocs.isNotEmpty) {
+          final rentDocId =
+              rentsDocs[0].id; // Assuming there's only one matching document
+          await FirebaseFirestore.instance
+              .collection('rents')
+              .doc(rentDocId)
+              .update({'status': 'approved'});
+        }
+      }
+    }
 
     // Update the approvalStatus in the borrower collection
     await FirebaseFirestore.instance
