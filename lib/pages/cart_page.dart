@@ -273,7 +273,7 @@ class _CartPageState extends State<CartPage> {
                             onPressed: () {
                               _showBuyDialog(index);
                             },
-                            child: Text('Request'),
+                            child: Text('Book'),
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
@@ -316,7 +316,7 @@ class _CartPageState extends State<CartPage> {
                   );
                 }
               },
-              child: Text('Send a Request'),
+              child: Text('Send a Booking'),
             ),
             TextButton(
               onPressed: () {

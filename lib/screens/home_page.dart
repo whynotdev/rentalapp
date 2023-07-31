@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           SizedBox(
-            height: 40,
+            height: 10,
           ),
           CarouselSlider(
             options: CarouselOptions(
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
               );
             }).toList(),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Column(
@@ -236,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

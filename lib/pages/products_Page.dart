@@ -16,9 +16,20 @@ import '../screens/login_page.dart';
 class ProductPage extends StatelessWidget {
   final String selectedCategory;
 
+
   ProductPage({required this.selectedCategory});
 
   String currUSer = FirebaseAuth.instance.currentUser!.uid;
+ String getStatusDisplayText(String status) {
+  if (status == 'Available') {
+    return 'Available';
+  } else if (status == 'approved') { // Change 'Approved' to 'approved'
+    return 'Borrowed';
+  } else {
+    return 'Unknown'; // You can set any default display text for other statuses
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,25 +38,6 @@ class ProductPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text('P r o d u c t s'),
-        //automaticallyImplyLeading: false,
-        /* actions: [
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black,
-            ),
-            onPressed: () async {
-              await FirebaseServices().SignOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ));
-
-              // TODO: Logout functionality here
-            },
-          ),
-        ],*/
       ),
       drawer: Drawer(
         child: ListView(
@@ -192,8 +184,11 @@ class ProductPage extends StatelessWidget {
               final productName = data['productName'] as String?;
               final price = data['price'] as double?;
               final uploaderUid = data['uid'].toString();
-              final status = data['status'] as String? ?? 'Available';
+             
               final ownerName = data['ownerName'] as String?;
+               final status = data.containsKey('status')
+      ? data['status'] as String
+      : 'Unknown';
               print(uploaderUid);
               return Card(
                 elevation: 4,
@@ -249,11 +244,16 @@ class ProductPage extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color:
-                              status == 'Available' ? Colors.green : Colors.red,
+                          color: status == 'Available'
+                              ? Colors.green
+                              : status == 'approved'
+                                  ? Colors.red
+                                  : Colors
+                                      .grey, // You can set any default color for other statuses
                         ),
                         child: Text(
-                          status,
+                          getStatusDisplayText(
+                              status), // Use the function to get the display text
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
