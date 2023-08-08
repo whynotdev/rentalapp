@@ -95,6 +95,8 @@ class _ViewProductsState extends State<ViewProducts> {
                               onPressed: () {
                                 addToCart(data);
                                 //utils inside defined
+                                print(data);
+                                
                               },
                               child: const Text('Add to Cart'),
                               style: ElevatedButton.styleFrom(

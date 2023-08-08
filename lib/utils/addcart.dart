@@ -13,11 +13,12 @@ void addToCart(Map<String, dynamic> product) {
         .doc(userId)
         .collection('products');
 
-    final productId = product['productId'];
+    final pdi = product['pdi'];
+    print("pdi=$pdi");
 
-    // Query the cart items collection to check if a product with the same productId exists
+    // Query the cart items collection to check if a product with the same pdi exists
     cartItemsCollection
-        .where('productId', isEqualTo: productId)
+        .where('pdi', isEqualTo: pdi)
         .get()
         .then((snapshot) {
       if (snapshot.docs.isNotEmpty) {

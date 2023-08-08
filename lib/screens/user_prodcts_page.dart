@@ -121,7 +121,7 @@ class YourProducts extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         price != null
-                            ? '\$${price.toStringAsFixed(2)}/day'
+                            ? '\Rs${price.toStringAsFixed(2)}/day'
                             : 'Price not available',
                         style: TextStyle(
                           fontSize: 14,

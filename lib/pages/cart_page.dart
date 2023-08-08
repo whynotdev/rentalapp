@@ -223,64 +223,67 @@ class _CartPageState extends State<CartPage> {
                 //  final description = product['description'] as String?;
                 final deposit = product['deposit'] as double?;
 
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(8.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    child: ListTile(
-                      leading: Icon(Icons.shopping_cart),
-                      title: Text(productName ?? ''),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Owner: ${ownerName ?? ''}'),
-                          Text('Price: \Rs${price ?? ''}/day'),
-                          // Text('Description: ${description ?? ''}'),
-                          Text('Deposit: \$${deposit ?? ''}'),
-                        ],
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              _removeFromCart(product['id']);
-                            },
-                            child: Text('Remove'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                      child: ListTile(
+                        leading: Icon(Icons.shopping_cart),
+                        title: Text(productName ?? ''),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Owner: ${ownerName ?? ''}'),
+                            Text('Price: \Rs${price ?? ''}/day'),
+                            // Text('Description: ${description ?? ''}'),
+                            Text('Deposit: \Rs${deposit ?? ''}'),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                _removeFromCart(product['id']);
+                              },
+                              child: Text('Remove'),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              _showBuyDialog(index);
-                            },
-                            child: Text('Book'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                            SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                _showBuyDialog(index);
+                              },
+                              child: Text('Book'),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
